@@ -1,0 +1,63 @@
+`timescale 1ns / 1ps
+
+module topmodule(input logic clk, rst);
+logic [31:0] pc;
+logic [31:0] instruction;
+
+logic [6:0] opcode, funct7;
+logic [4:0] rd, rs1, rs2;
+logic [11:0] immediate;
+logic [31:0] extended_imm;
+logic [2:0] funct3;
+
+// register file
+logic [31:0] data1, data2;
+
+// ALU
+logic [31:0] alu_out, mux_out;
+
+// CONTROL LOGIC
+logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite;
+logic [1:0] ALUOp;
+logic [3:0] alu_control_lines;
+
+progcounter pc_uut(.clk(clk), .rst(rst), .pc(pc));
+
+instruction_mem inst_uut(.pc(pc), .instruction(instruction));
+
+always_comb begin
+    opcode = instruction[6:0];      // 7 bits
+    rd = instruction[11:7];         // 5 bits
+    funct3 = instruction[14:12];    // 3 bits 
+    rs1 = instruction[19:15];       // 5 bits
+    if (opcode == 51) begin
+        rs2 = instruction[24:20];   // 5 bits
+        funct7 = instruction[31:25]; // 7bits
+        // cleanup
+        immediate = 0;
+    end 
+    else begin
+        immediate = instruction[31:20]; // 12bits
+        // cleanup
+        rs2 = 0;
+        funct7 = 0;
+    end
+end
+
+// CONTROL LOGIC
+control_logic uut_control_unit(.opcode(opcode), .Branch(Branch), .MemRead(MemRead),
+ .MemtoReg(MemtoReg), .MemWrite(MemWrite), .ALUSrc(ALUSrc), .RegWrite(RegWrite),
+ .ALUOp(ALUOp));
+ 
+// ALU CONTROL
+alu_control uut_alu_control(.ALUOp(ALUOp), .funct3(funct3), .funct7(funct7[5]), .alu_control_lines(alu_control_lines));
+
+reg_file uut_regfile(.RegWrite(RegWrite),.clk(clk), .rsW(rd), 
+            .rs1(rs1), .rs2(rs2), .dataW(alu_out), .out1(data1), .out2(data2));
+
+immediate_gen imm_gen_uut(.imm(immediate), .out(extended_imm));
+
+mux uut_mux(.in1(data2), .in2(extended_imm), .BSel(ALUSrc), .out(mux_out));
+
+alu uut_alu(.alu_control_lines(alu_control_lines), .in1(data1), .in2(mux_out), .alu_out(alu_out));
+endmodule
