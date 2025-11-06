@@ -2,7 +2,7 @@
 
 module instruction_mem(input logic [31:0] pc, output logic[31:0] instruction);
 
-logic [7:0] INST_MEM [19:0]; // for 5 instructions of 32 bits.
+logic [7:0] INST_MEM [23:0]; // for 5 instructions of 32 bits.
 
 initial begin
     $readmemh("instruction_mem.mem",INST_MEM);

@@ -3,7 +3,7 @@
 module control_logic(
 input logic [6:0] opcode,
 output logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite,
-output logic [1:0] ALUOp, ImmSrc);
+output logic [1:0] ALUOp, ImmSrc, ResultSrc);
 
 always_comb begin
     case (opcode)
@@ -15,6 +15,8 @@ always_comb begin
             MemtoReg = 0;
             Branch = 0;
             ALUOp = 2'b10;
+            ImmSrc = 0; // Don't Care
+            ResultSrc = 2'b00;
         end
         7'b0010011: begin // I type other than load
             RegWrite = 1;
@@ -25,6 +27,7 @@ always_comb begin
             Branch = 0;
             ALUOp = 2'b10;
             ImmSrc = 2'b00;
+            ResultSrc = 2'b00; // Write alu out to register file
         end
         7'b0000011: begin   // I type -- load instructions
             RegWrite = 1;
@@ -35,6 +38,7 @@ always_comb begin
             Branch = 0;
             ALUOp = 2'b00;
             ImmSrc = 2'b00;
+            ResultSrc = 2'b01; // write memory to register file
         end
         7'b0100011: begin  // S TYPE
             RegWrite = 0;
@@ -45,6 +49,7 @@ always_comb begin
             Branch = 0;
             ALUOp = 2'b00;
             ImmSrc = 2'b01; 
+            ResultSrc = 2'b00; // Don't care, we set to 0
         end
         7'b1100011: begin   // B type
             RegWrite = 0;
@@ -55,6 +60,7 @@ always_comb begin
             Branch = 1;
             ALUOp = 2'b01;
             ImmSrc = 2'b10;
+            ResultSrc = 2'b00; // DON't care
         end        
         // EXTEND FOR J TYPE AND MAKE IMMSRC 11
     endcase

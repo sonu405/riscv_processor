@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
 
-
 module datamemory(
 input logic [31:0] mem_addr, WD,
 input logic clk, MEMWrite, 

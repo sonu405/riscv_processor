@@ -16,9 +16,12 @@ logic [31:0] data1, data2;
 // ALU
 logic [31:0] alu_out, mux_out;
 
+// Mux to Register AT end
+logic [31:0] Result;
+
 // CONTROL LOGIC
 logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite;
-logic [1:0] ALUOp;
+logic [1:0] ALUOp, ImmSrc, ResultSrc;
 logic [3:0] alu_control_lines;
 
 progcounter pc_uut(.clk(clk), .rst(rst), .pc(pc));
@@ -46,18 +49,25 @@ end
 
 // CONTROL LOGIC
 control_logic uut_control_unit(.opcode(opcode), .Branch(Branch), .MemRead(MemRead),
- .MemtoReg(MemtoReg), .MemWrite(MemWrite), .ALUSrc(ALUSrc), .RegWrite(RegWrite),
+ .MemtoReg(MemtoReg), .MemWrite(MemWrite), .ALUSrc(ALUSrc), .RegWrite(RegWrite), .ImmSrc(ImmSrc), .ResultSrc(ResultSrc),
  .ALUOp(ALUOp));
  
 // ALU CONTROL
 alu_control uut_alu_control(.ALUOp(ALUOp), .funct3(funct3), .funct7(funct7[5]), .alu_control_lines(alu_control_lines));
 
 reg_file uut_regfile(.RegWrite(RegWrite),.clk(clk), .rsW(rd), 
-            .rs1(rs1), .rs2(rs2), .dataW(alu_out), .out1(data1), .out2(data2));
+            .rs1(rs1), .rs2(rs2), .dataW(Result), .out1(data1), .out2(data2));
 
-immediate_gen imm_gen_uut(.imm(immediate), .out(extended_imm));
+immediate_gen imm_gen_uut(.instr(instruction), .ImmSrc(ImmSrc), .out(extended_imm));
 
 mux uut_mux(.in1(data2), .in2(extended_imm), .BSel(ALUSrc), .out(mux_out));
 
 alu uut_alu(.alu_control_lines(alu_control_lines), .in1(data1), .in2(mux_out), .alu_out(alu_out));
+
+// Data memory
+logic [31:0] RD;
+datamemory uut_datamem(.clk(clk),.MEMWrite(MemWrite), .mem_addr(alu_out), .WD(data2), .func3(funct3), .RD(RD));
+
+// Result Mux : in2 -- datamemory Read Data
+fourby1mux uut_fourby1mux (.in1(alu_out), .in2(RD), .in3(32'b1), .in4(32'b0), .BSel(ResultSrc), .out(Result));
 endmodule

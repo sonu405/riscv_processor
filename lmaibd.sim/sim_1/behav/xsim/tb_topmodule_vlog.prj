@@ -3,6 +3,8 @@ sv xil_defaultlib  \
 "../../../../lmaibd.srcs/sources_1/new/alu.sv" \
 "../../../../lmaibd.srcs/sources_1/new/alu_control.sv" \
 "../../../../lmaibd.srcs/sources_1/new/control_logic.sv" \
+"../../../../lmaibd.srcs/sources_1/new/datamemory.sv" \
+"../../../../lmaibd.srcs/sources_1/new/fourby1mux.sv" \
 "../../../../lmaibd.srcs/sources_1/new/immediate_gen.sv" \
 "../../../../lmaibd.srcs/sources_1/new/instruction_mem.sv" \
 "../../../../lmaibd.srcs/sources_1/new/mux.sv" \
