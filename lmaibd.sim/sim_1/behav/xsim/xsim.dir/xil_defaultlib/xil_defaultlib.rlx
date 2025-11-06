@@ -3,6 +3,7 @@
 Jun 14 2018
 20:41:02
 C:/Users/godso/lmaibd/lmaibd.sim/sim_1/behav/xsim/glbl.v,1529022455,verilog,,,,glbl,,,,,,,,
+C:/Users/godso/lmaibd/lmaibd.srcs/sim_1/new/tb_datamemory.sv,1762451070,systemVerilog,,,,tb_datamemory,,,,,,,,
 C:/Users/godso/lmaibd/lmaibd.srcs/sim_1/new/tb_inst_mem.sv,1761168337,systemVerilog,,,,tb_inst_mem,,,,,,,,
 C:/Users/godso/lmaibd/lmaibd.srcs/sim_1/new/tb_mux.sv,1761169527,systemVerilog,,,,tb_mux,,,,,,,,
 C:/Users/godso/lmaibd/lmaibd.srcs/sim_1/new/tb_sign_imm.sv,1761170341,systemVerilog,,,,tb_sign_imm,,,,,,,,
@@ -10,6 +11,7 @@ C:/Users/godso/lmaibd/lmaibd.srcs/sim_1/new/tb_topmodule.sv,1761167319,systemVer
 C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/alu.sv,1761165695,systemVerilog,,C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/alu_control.sv,,alu,,,,,,,,
 C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/alu_control.sv,1761164941,systemVerilog,,C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/control_logic.sv,,alu_control,,,,,,,,
 C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/control_logic.sv,1761188389,systemVerilog,,C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/immediate_gen.sv,,control_logic,,,,,,,,
+C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/datamemory.sv,1762450739,systemVerilog,,C:/Users/godso/lmaibd/lmaibd.srcs/sim_1/new/tb_datamemory.sv,,datamemory,,,,,,,,
 C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/immediate_gen.sv,1761184969,systemVerilog,,C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/instruction_mem.sv,,immediate_gen,,,,,,,,
 C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/instruction_mem.sv,1761184272,systemVerilog,,C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/mux.sv,,instruction_mem,,,,,,,,
 C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/mux.sv,1761186047,systemVerilog,,C:/Users/godso/lmaibd/lmaibd.srcs/sources_1/new/progcounter.sv,,mux,,,,,,,,
