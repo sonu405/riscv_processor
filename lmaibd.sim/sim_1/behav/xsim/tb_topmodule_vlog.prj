@@ -1,5 +1,6 @@
 # compile verilog/system verilog design source files
 sv xil_defaultlib  \
+"../../../../lmaibd.srcs/sources_1/new/adder.sv" \
 "../../../../lmaibd.srcs/sources_1/new/alu.sv" \
 "../../../../lmaibd.srcs/sources_1/new/alu_control.sv" \
 "../../../../lmaibd.srcs/sources_1/new/control_logic.sv" \

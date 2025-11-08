@@ -19,6 +19,8 @@ end
 always_comb begin
     if (alu_out == 0) 
         Zero = 1'b1;
+    else 
+        Zero = 1'b0;
 end
 
 endmodule
