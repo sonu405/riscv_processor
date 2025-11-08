@@ -2,8 +2,10 @@
 
 module control_logic(
 input logic [6:0] opcode,
-output logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite,
+output logic Branch, MemRead, MemWrite, ALUSrc, RegWrite,
 output logic [1:0] ALUOp, ImmSrc, ResultSrc);
+
+// ResultSrc replaces MemToReg
 
 always_comb begin
     case (opcode)
@@ -12,7 +14,6 @@ always_comb begin
             ALUSrc = 0;
             MemRead = 0;
             MemWrite = 0;
-            MemtoReg = 0;
             Branch = 0;
             ALUOp = 2'b10;
             ImmSrc = 0; // Don't Care
@@ -23,7 +24,6 @@ always_comb begin
             ALUSrc = 1;
             MemRead = 0;
             MemWrite = 0;
-            MemtoReg = 0;
             Branch = 0;
             ALUOp = 2'b10;
             ImmSrc = 2'b00;
@@ -34,7 +34,6 @@ always_comb begin
             ALUSrc = 1;
             MemRead = 1;
             MemWrite = 0;
-            MemtoReg = 1;
             Branch = 0;
             ALUOp = 2'b00;
             ImmSrc = 2'b00;
@@ -45,7 +44,6 @@ always_comb begin
             ALUSrc = 1;
             MemRead = 0;
             MemWrite = 1;
-            MemtoReg = 0;
             Branch = 0;
             ALUOp = 2'b00;
             ImmSrc = 2'b01; 
@@ -56,7 +54,6 @@ always_comb begin
             ALUSrc = 0;
             MemRead = 0;
             MemWrite = 0;
-            MemtoReg = 0;
             Branch = 1;
             ALUOp = 2'b01;
             ImmSrc = 2'b10;

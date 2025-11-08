@@ -26,10 +26,13 @@ always_ff@(posedge clk) begin
         MEM[mem_addr + 1] = WD[7:0];
     end
     3'b010: begin
-        MEM[mem_addr] = WD[31:24];
-        MEM[mem_addr + 1] = WD[23:16];
-        MEM[mem_addr + 2] = WD[15:8];
-        MEM[mem_addr + 3] = WD[7:0];
+        // 0x44556677
+        // mem_addr     -> 77   [7:0]
+        // mem_addr + 1 -> 66
+        MEM[mem_addr] = WD[7:0];
+        MEM[mem_addr + 1] = WD[15:8];
+        MEM[mem_addr + 2] = WD[23:16];
+        MEM[mem_addr + 3] = WD[31:24];
     end
     endcase
     end
