@@ -26,7 +26,7 @@ logic [3:0] alu_control_lines;
 
 // Program Counter 
 adder uut_add1(.in1(pc), .in2(4), .out(PCPlus4)); // adder for => PC + 4
-adder uut_add2(.in1(pc), .in2(extended_imm), .out(PCTarget)); // adder for beq -- maybe put at end
+adder uut_add2(.in1(pc), .in2(extended_imm), .out(PCTarget)); // calculates PCTarget for B and J type instructions
 
 mux uut_mux2(.in1(PCPlus4), .in2(PCTarget), .BSel(PCSrc), .out(PCNext));
 
@@ -67,6 +67,9 @@ alu uut_alu(.alu_control_lines(alu_control_lines), .in1(data1), .in2(mux_out), .
 logic [31:0] RD;
 datamemory uut_datamem(.clk(clk),.MEMWrite(MemWrite), .mem_addr(alu_out), .WD(data2), .func3(funct3), .RD(RD));
 
-// Result Mux : in2 -- datamemory Read Data
-fourby1mux uut_fourby1mux (.in1(alu_out), .in2(RD), .in3(32'b1), .in4(32'b0), .BSel(ResultSrc), .out(Result));
+// Result Mux: choose the input that is written into the register file
+// in1 -- alu_out
+// in2 -- Data read by data memory
+// in3 -- PC + 4 -- for jump instruction's rd field
+fourby1mux uut_fourby1mux (.in1(alu_out), .in2(RD), .in3(PCPlus4), .in4(32'b0), .BSel(ResultSrc), .out(Result));
 endmodule

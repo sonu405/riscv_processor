@@ -5,7 +5,7 @@ input logic [6:0] opcode,
 input logic Zero,
 output logic Branch, MemRead, MemWrite, ALUSrc, RegWrite, PCSrc,
 output logic [1:0] ALUOp, ImmSrc, ResultSrc);
-
+// TODO: REMOVE MemRead after confirmation
 // ResultSrc replaces MemToReg
 
 always_comb begin
@@ -65,6 +65,17 @@ always_comb begin
             ResultSrc = 2'b00; // DON't care
             if (Zero)
                 PCSrc = 1'b1; // only when the instruction is B type and alu's Zero bit is 1
+        end
+        7'b1101111:begin       // J Type
+            RegWrite = 1;      // We write PC+4 to register file
+            ALUSrc = 0;
+            MemRead = 0;
+            MemWrite = 0;
+            Branch = 0;  
+            ALUOp = 2'b00;     // we don't use alu
+            ImmSrc = 2'b11;
+            ResultSrc = 2'b10; // write PC+4 to register file
+            PCSrc = 1'b1;      // take PCTarget as PCNext 
         end        
         // EXTEND FOR J TYPE AND MAKE IMMSRC 11
     endcase

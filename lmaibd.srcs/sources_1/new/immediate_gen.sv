@@ -14,7 +14,7 @@ always_comb begin
             out = {{19{instr[31]}},instr[31],instr[7], instr[30:25], instr[11:8], 1'b0};
         end
         2'b11: begin // J-Type
-            out = {{12{instr[31]}}, instr[31], instr[19:12], instr[20], instr[30:21],1'b0};
+            out = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21],1'b0};
         end
     endcase
 end
