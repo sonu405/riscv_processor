@@ -74,9 +74,9 @@ xvlog.*
 
 
 ## dirs
-lmaidb.cache/*
-lmaidb.hw/*
-lmaidb.ip_user_files/*
-lmaidb.runs/*
-lmaidb.sim/*
+lmaidb.cache/
+lmaidb.hw/
+lmaidb.ip_user_files/
+lmaidb.runs/
+lmaidb.sim/
 
