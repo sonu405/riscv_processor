@@ -20,15 +20,15 @@ logic [31:0] alu_out, mux_out;
 logic [31:0] Result;
 
 // CONTROL LOGIC
-logic Branch, MemRead, MemWrite, ALUSrc, RegWrite, PCSrc;
-logic [1:0] ALUOp, ImmSrc, ResultSrc;
+logic Branch, MemRead, MemWrite, ALUSrc, RegWrite;
+logic [1:0] ALUOp, ImmSrc, ResultSrc, PCSrc;
 logic [3:0] alu_control_lines;
 
 // Program Counter 
 adder uut_add1(.in1(pc), .in2(4), .out(PCPlus4)); // adder for => PC + 4
 adder uut_add2(.in1(pc), .in2(extended_imm), .out(PCTarget)); // calculates PCTarget for B and J type instructions
 
-mux uut_mux2(.in1(PCPlus4), .in2(PCTarget), .BSel(PCSrc), .out(PCNext));
+fourby1mux uut_mux2(.in1(PCPlus4), .in2(PCTarget), .in3(alu_out), .in4(32'b0), .BSel(PCSrc), .out(PCNext));
 
 progcounter pc_uut(.clk(clk), .rst(rst), .PCNext(PCNext),.pc(pc));
 
