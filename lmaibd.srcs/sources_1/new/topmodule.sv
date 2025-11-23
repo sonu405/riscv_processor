@@ -24,6 +24,9 @@ logic Branch, MemRead, MemWrite, ALUSrc, RegWrite, Jump;
 logic [1:0] ALUOp, ImmSrc, ResultSrc;
 logic [3:0] alu_control_lines;
 
+// branching signal from Branch Unit
+logic ToBranch;
+
 // Program Counter Logic for B and J type instructions
 adder uut_add1(.in1(pc), .in2(4), .out(PCPlus4)); // adder for => PC + 4
 
@@ -38,7 +41,7 @@ mux uut_mux4(.in1(pc), .in2(data1), .BSel(Jump & (~opcode[3])), .out(PCTargetAdd
 adder uut_add2(.in1(extended_imm), .in2(PCTargetAdderInput), .out(PCTarget)); // calculates PCTarget for B and J type instructions
 
 // mux before PC
-mux uut_mux3(.in1(PCPlus4), .in2(PCTarget), .BSel((ALUFlags[2] & Branch) | Jump), .out(PCNext));
+mux uut_mux3(.in1(PCPlus4), .in2(PCTarget), .BSel((ToBranch & Branch) | Jump), .out(PCNext));
 progcounter pc_uut(.clk(clk), .rst(rst), .PCNext(PCNext),.pc(pc));
 
 // Instruction memory
@@ -69,8 +72,10 @@ immediate_gen imm_gen_uut(.instr(instruction), .ImmSrc(ImmSrc), .out(extended_im
 
 mux uut_mux1(.in1(data2), .in2(extended_imm), .BSel(ALUSrc), .out(mux_out));
 
+// EXECUTE Stage
 alu uut_alu(.alu_control_lines(alu_control_lines), .in1(data1), .in2(mux_out), .alu_out(alu_out), .ALUFlags(ALUFlags));
 
+BranchUnit uut_branch(.ALUFlags(ALUFlags), .funct3(funct3), .ToBranch(ToBranch));
 
 // Data memory
 logic [31:0] RD;

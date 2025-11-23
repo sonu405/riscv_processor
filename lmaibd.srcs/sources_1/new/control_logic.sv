@@ -64,7 +64,7 @@ always_comb begin
             ResultSrc = 2'b00; // Don't care, we set to 0
             Jump = 0;
         end
-        7'b1100011: begin   // B type
+        7'b1100011: begin   // B type -- do A - B whenever Branch
             RegWrite = 0;
             ALUSrc = 0;
             MemRead = 0;

@@ -15,11 +15,12 @@ always_comb begin
     case (alu_control_lines)
         4'b0000: alu_out = in1 & in2;
         4'b0001: alu_out = in1 | in2;
-        // ALUFlags[2] is carryout
-//        4'b0010: {ALUFlags[1], alu_out} = in1 + in2; 
-//        4'b0110: {ALUFlags[1], alu_out} = in1 - in2;
-        4'b0010: alu_out = in1 + in2; 
-        4'b0110: alu_out = in1 - in2;
+        // ALUFlags[1] is carryout
+        4'b0010: {ALUFlags[1], alu_out} = in1 + in2; 
+        4'b0110: begin
+         {ALUFlags[1], alu_out} = in1 - in2;
+         ALUFlags[1] = ~ALUFlags[1]; // This is because in the above, in1 - in2 gave us the borrow and carry out = ~borrow.
+        end
         default: alu_out = 32'b0;
     endcase
     
