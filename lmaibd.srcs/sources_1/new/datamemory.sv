@@ -3,7 +3,7 @@
 module datamemory(
 input logic [31:0] mem_addr, WD,
 input logic clk, MEMWrite, 
-input logic [2:0] func3,
+input logic [2:0] funct3,
 output logic [31:0] RD
 );
 
@@ -16,7 +16,7 @@ end
 // FOR SW
 always_ff@(posedge clk) begin
     if (MEMWrite) begin
-    case (func3)
+    case (funct3)
     3'b000:begin
         MEM[mem_addr] <= WD[7:0];
     end
@@ -39,7 +39,7 @@ always_ff@(posedge clk) begin
 end
 
 always_comb begin
-    case (func3)
+    case (funct3)
     3'b000:begin 
         RD = {{24{MEM[mem_addr][7]}}, MEM[mem_addr]};
     end
