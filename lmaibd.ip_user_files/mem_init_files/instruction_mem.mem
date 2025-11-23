@@ -2,10 +2,10 @@
 23 20 A0 00 // sw x10, 0(x0)     -- 4
 83 25 00 00 // lw x11, 0(x0)     -- 8
 93 87 95 01 // addi x15, x11, 25 -- 12
-93 04 00 00 // addi x9, x0, 0
-93 04 60 FF // addi x9, x0, -10
-EF 02 C0 00 // jal x5, HELLO     -- 16
-93 87 97 01 // addi x15, x15, 25 -- 20
-93 87 97 01 // addi x15, x15, 25 -- 24
-93 87 97 01 // HELLO: addi x15, x15, 1 -- 28
-E7 00 00 00 // jalr x1, x0, 0    -- to start from start
+93 04 00 00 // addi x9, x0, 0    -- 16
+93 04 60 FF // addi x9, x0, -10  -- 20
+EF 02 C0 00 // jal x5, HELLO           -- 24 -- 0x18
+93 87 97 01 // addi x15, x15, 25       -- 28 -- 0x1c
+93 87 97 01 // addi x15, x15, 25       -- 32 -- 0x20
+93 87 97 01 // HELLO: addi x15, x15, 1 -- 36 -- 0x24
+E7 00 00 00 // jalr x1, x0, 0          -- 40 -- 0x28 -- to start from start
