@@ -3,10 +3,11 @@
 module Fetch(
     input logic clk, rst, Branch, ToBranch, Jump,
     input logic [31:0]  PCTarget,
-    output logic [31:0] pc, instruction, PCPlus4
+    output logic [31:0]  pc, instruction, PCPlus4
 );
 
 logic [31:0] PCNext;
+
 
 // mux selecting PC + 4 or either PC + imm or PC + reg for B and J type instructions.
 // The input logic only selects the case other than PC + 4 when we have to 
@@ -19,4 +20,5 @@ adder uut_add1(.in1(pc), .in2(4), .out(PCPlus4));
 
 // Instruction memory
 instruction_mem inst_uut(.pc(pc), .instruction(instruction));
+
 endmodule

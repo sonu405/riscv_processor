@@ -23,7 +23,7 @@ always_comb begin
     funct7 = instruction[31:25];    // 7 bits 
 end
 
-reg_file uut_regfile(.RegWrite(RegWrite),.clk(clk), .rsW(rd), 
+reg_file uut_regfile(.RegWrite(RegWrite),.clk(clk), .rsW(rdWD), 
             .rs1(rs1), .rs2(rs2), .dataW(dataW), .out1(data1), .out2(data2));
             
 immediate_gen imm_gen_uut(.instr(instruction), .ImmSrc(ImmSrc), .out(extended_imm));

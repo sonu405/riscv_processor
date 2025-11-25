@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_topmodule_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="pipeline_registers" />
+            <top_module name="tb_topmodule" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="44600000fs"></ZoomStartTime>
+      <ZoomEndTime time="204000001fs"></ZoomEndTime>
+      <Cursor1Time time="170000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="148"></NameColumnWidth>
+      <ValueColumnWidth column_width="99"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="20" />
+   <wvobject fp_name="/tb_topmodule/uut_top/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_fetch/pc" type="array">
+      <obj_property name="ElementShortName">pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/pcF" type="array">
+      <obj_property name="ElementShortName">pcF[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pcF[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_fetch/instruction" type="array">
+      <obj_property name="ElementShortName">instruction[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/instructionF" type="array">
+      <obj_property name="ElementShortName">instructionF[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instructionF[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/data1" type="array">
+      <obj_property name="ElementShortName">data1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data1[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/data2" type="array">
+      <obj_property name="ElementShortName">data2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data2[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/extended_imm" type="array">
+      <obj_property name="ElementShortName">extended_imm[31:0]</obj_property>
+      <obj_property name="ObjectShortName">extended_imm[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/alu_out" type="array">
+      <obj_property name="ElementShortName">alu_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">alu_out[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/PCTarget" type="array">
+      <obj_property name="ElementShortName">PCTarget[31:0]</obj_property>
+      <obj_property name="ObjectShortName">PCTarget[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_memory/RD" type="array">
+      <obj_property name="ElementShortName">RD[31:0]</obj_property>
+      <obj_property name="ObjectShortName">RD[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_writeback/Result" type="array">
+      <obj_property name="ElementShortName">Result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">Result[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/uut_regfile/rsW" type="array">
+      <obj_property name="ElementShortName">rsW[4:0]</obj_property>
+      <obj_property name="ObjectShortName">rsW[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/uut_regfile/dataW" type="array">
+      <obj_property name="ElementShortName">dataW[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dataW[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/uut_regfile/REG_FILE" type="array">
+      <obj_property name="ElementShortName">REG_FILE[31:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">REG_FILE[31:0][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/if_id" type="array">
+      <obj_property name="ElementShortName">if_id</obj_property>
+      <obj_property name="ObjectShortName">if_id</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/id_ex" type="array">
+      <obj_property name="ElementShortName">id_ex</obj_property>
+      <obj_property name="ObjectShortName">id_ex</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/ex_mem" type="array">
+      <obj_property name="ElementShortName">ex_mem</obj_property>
+      <obj_property name="ObjectShortName">ex_mem</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/mem_wb" type="array">
+      <obj_property name="ElementShortName">mem_wb</obj_property>
+      <obj_property name="ObjectShortName">mem_wb</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+</wave_config>
