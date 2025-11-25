@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="44600000fs"></ZoomStartTime>
-      <ZoomEndTime time="204000001fs"></ZoomEndTime>
-      <Cursor1Time time="170000000fs"></Cursor1Time>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="80100001fs"></ZoomEndTime>
+      <Cursor1Time time="16000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="148"></NameColumnWidth>
-      <ValueColumnWidth column_width="99"></ValueColumnWidth>
+      <ValueColumnWidth column_width="95"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="20" />
+   <WVObjectSize size="24" />
    <wvobject fp_name="/tb_topmodule/uut_top/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -49,9 +49,25 @@
       <obj_property name="ElementShortName">data1[31:0]</obj_property>
       <obj_property name="ObjectShortName">data1[31:0]</obj_property>
    </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/rs1" type="array">
+      <obj_property name="ElementShortName">rs1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">rs1[4:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/data2" type="array">
       <obj_property name="ElementShortName">data2[31:0]</obj_property>
       <obj_property name="ObjectShortName">data2[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/rs2" type="array">
+      <obj_property name="ElementShortName">rs2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">rs2[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/uut_regfile/rs2" type="array">
+      <obj_property name="ElementShortName">rs2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">rs2[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/uut_regfile/out2" type="array">
+      <obj_property name="ElementShortName">out2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">out2[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/extended_imm" type="array">
       <obj_property name="ElementShortName">extended_imm[31:0]</obj_property>
@@ -104,6 +120,5 @@
    <wvobject fp_name="/tb_topmodule/uut_top/mem_wb" type="array">
       <obj_property name="ElementShortName">mem_wb</obj_property>
       <obj_property name="ObjectShortName">mem_wb</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
 </wave_config>

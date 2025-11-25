@@ -1,4 +1,13 @@
 THIS IS THE IMPLEMENTATION OF RISC V PROCESSOR.
+
+// NOTE That there is a critical bug that the value of x5 can't be read by sw because x5 is avialble in 6th after it 
+whereas in the 5th cycle starting from addi, the sw tries to read the value of x5. This constrait is 
+actually imposed by the nonblocking assignment since they don't write the value in cycle 5 which is of the writeback
+but rather the value is written in the register file at the start of the cycle 6. 
+
+TO solve this, one hope is forwarding. 
+Another way is using non-blocking assignemnt but they didn't work the last time i checked. 
+
 Test Code:
 
 addi x1, x0, 5        # x1 = 5  -- 93 00 50 00
