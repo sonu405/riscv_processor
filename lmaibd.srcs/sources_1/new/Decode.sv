@@ -18,9 +18,11 @@ assign rs2 = instruction[24:20];       // 5 bits
 always_comb begin
     // Immediate is splitted by extend unit based on the signal by control unit.
     opcode = instruction[6:0];      // 7 bits
-    rd = instruction[11:7];         // 5 bits
     funct3 = instruction[14:12];    // 3 bits 
-    funct7 = instruction[31:25];    // 7 bits 
+    funct7 = instruction[31:25];    // 7 bits
+    if (opcode == 7'b1100011 || opcode == 7'b0100011) 
+         rd = 0;
+    else rd = instruction[11:7];         // 5 bits
 end
 
 reg_file uut_regfile(.RegWrite(RegWrite),.clk(clk), .rsW(rdWD), 
