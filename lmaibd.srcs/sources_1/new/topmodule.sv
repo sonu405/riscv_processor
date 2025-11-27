@@ -94,6 +94,7 @@ always_ff @(posedge clk or posedge rst) begin
     id_ex.Branch            <= BranchD;
     id_ex.RegWrite          <= RegWriteD;
     id_ex.MemWrite          <= MemWriteD;
+    id_ex.MemRead           <= MemReadD;
     id_ex.ALUSrc            <= ALUSrcD;
     id_ex.Jump              <= JumpD;
     id_ex.opcode3           <= opcodeD[3];
@@ -145,12 +146,22 @@ Execute uut_execute(
 
 always_ff @(posedge clk or posedge rst) begin
     ex_mem.MemWrite  <= id_ex.MemWrite;
+    ex_mem.MemRead   <= id_ex.MemRead;
     ex_mem.RegWrite  <= id_ex.RegWrite;
     ex_mem.ResultSrc <= id_ex.ResultSrc;
     ex_mem.funct3    <= id_ex.funct3;
     ex_mem.rd        <= id_ex.rd;
-//    ex_mem.data2     <= id_ex.data2;
-    ex_mem.data2     <= FU_data2;
+//  ex_mem.data2     <= id_ex.data2;
+    
+    // --- FOR DATA FORWARDING WHEN Store followed by a load
+    // IS THE BUG CHECKING THE OLD VALUE OF MEMREAD? 
+//    if (id_ex.MemWrite && ex_mem.MemRead) begin
+    if (id_ex.MemWrite && ex_mem.MemRead) begin
+        if (id_ex.rs2 == ex_mem.rd) begin
+            ex_mem.data2 <= RDM;
+        end
+    end
+    else ex_mem.data2 <= FU_data2;
     ex_mem.alu_out   <= alu_outE;
     ex_mem.PCPlus4   <= id_ex.PCPlus4;
 end
@@ -166,8 +177,8 @@ end
 // assign mem_addrM = alu_outE;
 // assign RegWriteM = RegWriteE;
 
-Memory uut_memory(.clk(clk), .MemWrite(ex_mem.MemWrite), .funct3(ex_mem.funct3), 
-    .data2(ex_mem.data2), .mem_addr(ex_mem.alu_out), .RD(RDM));
+Memory uut_memory(.clk(clk), .MemWrite(ex_mem.MemWrite), .MemRead(ex_mem.MemRead),
+ .funct3(ex_mem.funct3), .data2(ex_mem.data2), .mem_addr(ex_mem.alu_out), .RD(RDM));
 
 always_ff @(posedge clk or posedge rst) begin
     mem_wb.RegWrite  <= ex_mem.RegWrite;
@@ -191,6 +202,7 @@ Writeback uut_writeback(.ResultSrc(mem_wb.ResultSrc), .alu_out(mem_wb.alu_out),
 
 // Data Hazard Unit
 always_comb begin
+    // --- FOR DATA FORWARDING BASED ON source and destination registers
     // for data1 of register file
     if ((mem_wb.RegWrite) && (mem_wb.rd != 0) && (id_ex.rs1 == mem_wb.rd)) begin
         ForwardA = 2'b01;
@@ -208,6 +220,8 @@ always_comb begin
         ForwardB = 2'b10;
     end 
     else ForwardB = 2'b00;
+    
+
 end
 endmodule
 

@@ -8,7 +8,7 @@ package pipeline_registers;
     }IF_ID;
 
     typedef struct packed {
-        logic Branch, MemWrite, RegWrite, ALUSrc, Jump, opcode3;
+        logic Branch, MemWrite, MemRead, RegWrite, ALUSrc, Jump, opcode3;
         logic [1:0] ResultSrc;
         logic [3:0] alu_control_lines;
         logic [2:0] funct3;
@@ -17,7 +17,7 @@ package pipeline_registers;
     } ID_EX;
 
     typedef struct packed {
-        logic MemWrite, RegWrite;
+        logic MemWrite, MemRead, RegWrite;
         logic [1:0] ResultSrc;
         logic [2:0] funct3;
         logic [4:0] rd;
