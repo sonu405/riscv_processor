@@ -21,14 +21,15 @@ logic [3:0] alu_control_linesD;
 logic [6:0] opcodeD, funct7D;
 logic [2:0] funct3D;
 logic [31:0] data1D, data2D, extended_immD, instructionD, PCPlus4D, pcD, ResultD;
-logic [4:0] rdD;
+logic [4:0] rdD, rs1D, rs2D;
 
 
 
 
 // EXECUTE;
 logic BranchE, ToBranchE, JumpE;
-logic [31:0] PCTargetE, alu_outE;
+logic [31:0] PCTargetE, alu_outE, FU_data1, FU_data2;
+logic [1:0] ForwardA, ForwardB;
 //logic  ALUSrcE, opcode3E, ResultSrcE, MemWriteE, RegWriteE;
 //logic [2:0] funct3E;
 //logic [3:0] alu_control_linesE;
@@ -84,7 +85,7 @@ Decode uut_decode(
 .instruction(if_id.instruction),
 .opcode(opcodeD), .funct7(funct7D),
 .rdWD(rdW),
-.rd(rdD),
+.rd(rdD), .rs1(rs1D), .rs2(rs2D),
 .data1(data1D), .data2(data2D), .dataW(ResultW), .extended_imm(extended_immD),
 .funct3(funct3D)
 );
@@ -99,6 +100,8 @@ always_ff @(posedge clk or posedge rst) begin
     id_ex.ResultSrc         <= ResultSrcD;
     id_ex.alu_control_lines <= alu_control_linesD;    
     id_ex.funct3            <= funct3D;
+    id_ex.rs1               <= rs1D;
+    id_ex.rs2               <= rs2D;
     id_ex.rd                <= rdD;
     id_ex.data1             <= data1D;
     id_ex.data2             <= data2D;
@@ -124,9 +127,16 @@ end
 assign JumpE = id_ex.Jump;
 assign BranchE = id_ex.Branch;
 
+// FORWARD UNIT MUX LOGIC
+fourby1mux uut_fu_mux1 (.in1(id_ex.data1), .in2(mem_wb.alu_out), .in3(ex_mem.alu_out), .in4(0), .BSel(ForwardA), .out(FU_data1));
+fourby1mux uut_fu_mux2 (.in1(id_ex.data2), .in2(mem_wb.alu_out), .in3(ex_mem.alu_out), .in4(0), .BSel(ForwardB), .out(FU_data2));
+
+// FORWARD UNIT MUX LOGIC
+
 Execute uut_execute(
 .Jump(id_ex.Jump), .opcode3(id_ex.opcode3), .ALUSrc(id_ex.ALUSrc),
-.data1(id_ex.data1), .data2(id_ex.data2), .extended_imm(id_ex.extended_imm), .pc(id_ex.pc),
+.data1(FU_data1), .data2(FU_data2),
+.extended_imm(id_ex.extended_imm), .pc(id_ex.pc),
 .funct3(id_ex.funct3),
 .alu_control_lines(id_ex.alu_control_lines),
 .ToBranch(ToBranchE),
@@ -139,7 +149,8 @@ always_ff @(posedge clk or posedge rst) begin
     ex_mem.ResultSrc <= id_ex.ResultSrc;
     ex_mem.funct3    <= id_ex.funct3;
     ex_mem.rd        <= id_ex.rd;
-    ex_mem.data2     <= id_ex.data2;
+//    ex_mem.data2     <= id_ex.data2;
+    ex_mem.data2     <= FU_data2;
     ex_mem.alu_out   <= alu_outE;
     ex_mem.PCPlus4   <= id_ex.PCPlus4;
 end
@@ -177,4 +188,41 @@ assign RegWriteW = mem_wb.RegWrite;
 Writeback uut_writeback(.ResultSrc(mem_wb.ResultSrc), .alu_out(mem_wb.alu_out), 
     .RD(mem_wb.RD), .PCPlus4(mem_wb.PCPlus4), .Result(ResultW));
 
+
+// Data Hazard Unit
+always_comb begin
+    // for data1 of register file
+    if ((mem_wb.RegWrite) && (mem_wb.rd != 0) && (id_ex.rs1 == mem_wb.rd)) begin
+        ForwardA = 2'b01;
+    end
+    else if ((ex_mem.RegWrite) && (ex_mem.rd != 0) && (id_ex.rs1 == ex_mem.rd)) begin
+        ForwardA = 2'b10;
+    end
+    else ForwardA = 2'b00;
+    
+    // for data2 of register file
+    if ((mem_wb.RegWrite) && (mem_wb.rd != 0) && (id_ex.rs2 == mem_wb.rd)) begin
+        ForwardB = 2'b01;
+    end
+    else if ((ex_mem.RegWrite) && (ex_mem.rd != 0) && (id_ex.rs2 == ex_mem.rd)) begin
+        ForwardB = 2'b10;
+    end 
+    else ForwardB = 2'b00;
+end
 endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

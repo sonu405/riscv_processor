@@ -12,7 +12,7 @@ package pipeline_registers;
         logic [1:0] ResultSrc;
         logic [3:0] alu_control_lines;
         logic [2:0] funct3;
-        logic [4:0] rd;
+        logic [4:0] rd, rs1, rs2;
         logic [31:0] data1, data2, extended_imm, PCPlus4, pc;
     } ID_EX;
 
