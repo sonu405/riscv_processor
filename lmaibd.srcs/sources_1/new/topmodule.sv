@@ -5,10 +5,15 @@ import pipeline_registers::*;
 module topmodule(input logic clk, rst);
 
 // PIPELINE REGISTERS
-IF_ID if_id;
-ID_EX id_ex;
-EX_MEM ex_mem;
-MEM_WB mem_wb;
+IF_ID if_id = '0;
+ID_EX id_ex = '0;
+EX_MEM ex_mem = '0;
+MEM_WB mem_wb = '0;
+//IF_ID if_id;
+//ID_EX id_ex;
+//EX_MEM ex_mem;
+//MEM_WB mem_wb;
+
 
 // LOGIC SIGNALS DEFINED
 // FETCH;
@@ -22,46 +27,37 @@ logic [6:0] opcodeD, funct7D;
 logic [2:0] funct3D;
 logic [31:0] data1D, data2D, extended_immD, instructionD, PCPlus4D, pcD, ResultD;
 logic [4:0] rdD, rs1D, rs2D;
-
-
+// For hazard detection uni
+logic PCWrite, IF_ID_Write, Stall;
 
 
 // EXECUTE;
 logic BranchE, ToBranchE, JumpE;
 logic [31:0] PCTargetE, alu_outE, FU_data1, FU_data2;
 logic [1:0] ForwardA, ForwardB;
-//logic  ALUSrcE, opcode3E, ResultSrcE, MemWriteE, RegWriteE;
-//logic [2:0] funct3E;
-//logic [3:0] alu_control_linesE;
-//logic [4:0] rdE;
-//logic [31:0] data1E, data2E, extended_immE, pcE, PCPlus4E;
+
 
 // MEMORY
-//logic MemWriteM, ResultSrcM, RegWriteM; 
-//logic [2:0] funct3M;
-//logic [4:0] rdM;
-//logic [31:0] data2M, mem_addrM, RDM, PCPlus4M, alu_outM;
 logic [31:0] RDM;
 
 // WRITEBACK
-//logic [1:0] ResultSrcW;
 logic RegWriteW;
 logic [4:0] rdW;
 logic [31:0] ResultW;
-//logic [31:0] alu_outW, RDW, PCPlus4W, ResultW;
-
 
 // FETCH STAGE
 Fetch uut_fetch(
-    .clk(clk), .rst(rst), .Branch(BranchE), .ToBranch(ToBranchE), .Jump(JumpE),
+    .clk(clk), .rst(rst), .PCWrite(PCWrite), .Branch(BranchE), .ToBranch(ToBranchE), .Jump(JumpE),
     .PCTarget(PCTargetE),
     .pc(pcF), .instruction(instructionF), .PCPlus4(PCPlus4F)
 );
 
 always_ff @(posedge clk or posedge rst) begin
-    if_id.pc <= pcF;
-    if_id.instruction <= instructionF;
-    if_id.PCPlus4 <= PCPlus4F;
+    if (IF_ID_Write) begin
+        if_id.pc <= pcF;
+        if_id.instruction <= instructionF;
+        if_id.PCPlus4 <= PCPlus4F;
+    end
 end
 
 // DECODE STAGE
@@ -70,13 +66,19 @@ assign pcD = pcF;
 assign instructionD = instructionF;
 // rd and Result and RegWrite are already given as input from Writeback stage.
 
+// Hazard Detection Unit
+HazardDectectionUnit uut_hdu(.ID_EX_MEMRead(id_ex.MemRead), .ID_EX_rd(id_ex.rd),
+ .rs1D(rs1D), .rs2D(rs2D), .MemWriteD(MemWriteD), .PCWrite(PCWrite), .IF_ID_Write(IF_ID_Write), .Stall(Stall));
+
+
 // Control logic
 control_logic uut_control_unit(.opcode(opcodeD), .Branch(BranchD), .MemRead(MemReadD),
  .MemWrite(MemWriteD), .ALUSrc(ALUSrcD), .RegWrite(RegWriteD), .ImmSrc(ImmSrcD), 
  .Jump(JumpD), .ResultSrc(ResultSrcD), .ALUOp(ALUOpD));
  
 // ALU CONTROL
- alu_control uut_alu_control(.ALUOp(ALUOpD), .funct3(funct3D), .op5(opcodeD[5]), .funct7(funct7D[5]), .alu_control_lines(alu_control_linesD));
+ alu_control uut_alu_control(.ALUOp(ALUOpD), .funct3(funct3D), .op5(opcodeD[5]), 
+ .funct7(funct7D[5]), .alu_control_lines(alu_control_linesD));
 
 
 Decode uut_decode(
@@ -91,46 +93,47 @@ Decode uut_decode(
 );
 
 always_ff @(posedge clk or posedge rst) begin
-    id_ex.Branch            <= BranchD;
-    id_ex.RegWrite          <= RegWriteD;
-    id_ex.MemWrite          <= MemWriteD;
-    id_ex.MemRead           <= MemReadD;
-    id_ex.ALUSrc            <= ALUSrcD;
-    id_ex.Jump              <= JumpD;
-    id_ex.opcode3           <= opcodeD[3];
-    id_ex.ResultSrc         <= ResultSrcD;
-    id_ex.alu_control_lines <= alu_control_linesD;    
-    id_ex.funct3            <= funct3D;
-    id_ex.rs1               <= rs1D;
-    id_ex.rs2               <= rs2D;
-    id_ex.rd                <= rdD;
-    id_ex.data1             <= data1D;
-    id_ex.data2             <= data2D;
-    id_ex.extended_imm      <= extended_immD;
-    id_ex.PCPlus4           <= if_id.PCPlus4;
-    id_ex.pc                <= if_id.pc;
+    if (Stall) begin
+        id_ex <= '0; // setting everything to zero. Then we unzero the rest.
+        id_ex.opcode3           <= opcodeD[3]; 
+        id_ex.funct3            <= funct3D;
+        id_ex.rs1               <= rs1D;
+        id_ex.rs2               <= rs2D;
+        id_ex.rd                <= rdD;
+        id_ex.data1             <= data1D;
+        id_ex.data2             <= data2D;
+        id_ex.extended_imm      <= extended_immD;
+        id_ex.PCPlus4           <= if_id.PCPlus4;
+        id_ex.pc                <= if_id.pc;
+    end else begin
+        id_ex.Branch            <= BranchD;
+        id_ex.RegWrite          <= RegWriteD;
+        id_ex.MemWrite          <= MemWriteD;
+        id_ex.MemRead           <= MemReadD;
+        id_ex.ALUSrc            <= ALUSrcD;
+        id_ex.Jump              <= JumpD;
+        id_ex.ResultSrc         <= ResultSrcD;
+        id_ex.alu_control_lines <= alu_control_linesD;   
+        id_ex.opcode3           <= opcodeD[3]; 
+        id_ex.funct3            <= funct3D;
+        id_ex.rs1               <= rs1D;
+        id_ex.rs2               <= rs2D;
+        id_ex.rd                <= rdD;
+        id_ex.data1             <= data1D;
+        id_ex.data2             <= data2D;
+        id_ex.extended_imm      <= extended_immD;
+        id_ex.PCPlus4           <= if_id.PCPlus4;
+        id_ex.pc                <= if_id.pc;
+    end
 end
 
 // EXECUTE STAGE
-// assign ResultSrcE = ResultSrcD; 
-// assign rdE = rdD;
-// assign PCPlus4E = PCPlus4D;
-// assign MemWriteE = MemWriteD;
-// assign RegWriteE = RegWriteD;
-// assign funct3E = funct3D;
-// assign data1E = data1D;
-// assign data2E = data2D;
-// assign opcode3E = opcodeD[3];
-// assign ALUSrcE = ALUSrcD;
-// assign extended_immE = extended_immD;
-// assign pcE = pcD;
-// assign alu_control_linesE = alu_control_linesD;
 assign JumpE = id_ex.Jump;
 assign BranchE = id_ex.Branch;
 
 // FORWARD UNIT MUX LOGIC
-fourby1mux uut_fu_mux1 (.in1(id_ex.data1), .in2(mem_wb.alu_out), .in3(ex_mem.alu_out), .in4(0), .BSel(ForwardA), .out(FU_data1));
-fourby1mux uut_fu_mux2 (.in1(id_ex.data2), .in2(mem_wb.alu_out), .in3(ex_mem.alu_out), .in4(0), .BSel(ForwardB), .out(FU_data2));
+fourby1mux uut_fu_mux1 (.in1(id_ex.data1), .in2(ResultW), .in3(ex_mem.alu_out), .in4(0), .BSel(ForwardA), .out(FU_data1));
+fourby1mux uut_fu_mux2 (.in1(id_ex.data2), .in2(ResultW), .in3(ex_mem.alu_out), .in4(0), .BSel(ForwardB), .out(FU_data2));
 
 // FORWARD UNIT MUX LOGIC
 
@@ -167,16 +170,6 @@ always_ff @(posedge clk or posedge rst) begin
 end
 
 // MEMORY STAGE
-//assign ResultSrcM = ResultSrcE; 
-//assign rdM = rdE;
-//assign alu_outM = alu_outE;
-//assign PCPlus4M = PCPlus4E;
-// assign MemWriteM = MemWriteE;
-// assign funct3M = funct3E;
-// assign data2M = data2E;
-// assign mem_addrM = alu_outE;
-// assign RegWriteM = RegWriteE;
-
 Memory uut_memory(.clk(clk), .MemWrite(ex_mem.MemWrite), .MemRead(ex_mem.MemRead),
  .funct3(ex_mem.funct3), .data2(ex_mem.data2), .mem_addr(ex_mem.alu_out), .RD(RDM));
 
@@ -190,10 +183,6 @@ always_ff @(posedge clk or posedge rst) begin
 end
 
 // WRITEBACK STAGE
-//assign ResultSrcW = ResultSrcM;
-//assign alu_outW = alu_outM;
-//assign RDW = RDM;
-//assign PCPlus4W = PCPlus4M;
 assign rdW = mem_wb.rd;
 assign RegWriteW = mem_wb.RegWrite;
 Writeback uut_writeback(.ResultSrc(mem_wb.ResultSrc), .alu_out(mem_wb.alu_out), 
@@ -220,8 +209,6 @@ always_comb begin
         ForwardB = 2'b10;
     end 
     else ForwardB = 2'b00;
-    
-
 end
 endmodule
 

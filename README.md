@@ -8,6 +8,25 @@ THIS IS THE IMPLEMENTATION OF RISC V PROCESSOR.
 	would take it's value from the EX_MEM register but in the case of load, the value can only be taken 
 	from load
 
+2. One case where the forwarding can't save the day is when we have load instruction storing value in a register and then we use 
+that register s in the next instruction. Forwarding can't help becaue data is availble in the mem stage, stored in 
+the mem_wb regiseter and  the next instruction requries value in the execute stage thus 
+forwarding isn't useful because the arrow goes back in time. In this case, we must stall. 
+
+For stall, we setup a hazard detection unit in the decode stage. It checks if the prev instruction was 
+load using MemRead of the EX_MEM register and 
+It sets a new signal PCWrite to 0 so that pc isn't updated while we stall. The signal 
+IF/ID signal to zero so that this register is no longer written. 
+
+Next, We also set the control signals for our current instruction (which is the one following the load)
+to zero so that the stall for the current instruction stall through all the stage by one cycle 
+In the next cycle, How does the unstall of the PC happens?
+
+3. One more thing changed in this code is that we set the forwarded value from the WRITEBACK Stage as ResultW
+instead of MEM_WB.alu_out. 
+This is because if some instruction wants lw instruction to forward it's value when the lw is in it's writeback
+stage then the instruction expects the value that would be written instead of the alu_out stored in mem_wb.
+
 Test Code:
 
 addi x1, x0, 5        # x1 = 5  -- 93 00 50 00
