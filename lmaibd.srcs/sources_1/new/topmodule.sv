@@ -9,11 +9,10 @@ IF_ID if_id = '0;
 ID_EX id_ex = '0;
 EX_MEM ex_mem = '0;
 MEM_WB mem_wb = '0;
-//IF_ID if_id;
-//ID_EX id_ex;
-//EX_MEM ex_mem;
-//MEM_WB mem_wb;
 
+
+logic IF_ID_flush = 1'b0;
+logic ID_EX_flush = 1'b0;
 
 // LOGIC SIGNALS DEFINED
 // FETCH;
@@ -54,9 +53,16 @@ Fetch uut_fetch(
 
 always_ff @(posedge clk or posedge rst) begin
     if (IF_ID_Write) begin
-        if_id.pc <= pcF;
-        if_id.instruction <= instructionF;
-        if_id.PCPlus4 <= PCPlus4F;
+        if (IF_ID_flush) begin
+            if_id.pc <= 0;
+            if_id.instruction <= 0; // THIS FORMS a nop
+            if_id.PCPlus4 <= 0; 
+        end
+        else begin
+            if_id.pc <= pcF;
+            if_id.instruction <= instructionF;
+            if_id.PCPlus4 <= PCPlus4F;
+        end
     end
 end
 
@@ -68,7 +74,9 @@ assign instructionD = instructionF;
 
 // Hazard Detection Unit
 HazardDectectionUnit uut_hdu(.ID_EX_MEMRead(id_ex.MemRead), .ID_EX_rd(id_ex.rd),
- .rs1D(rs1D), .rs2D(rs2D), .MemWriteD(MemWriteD), .PCWrite(PCWrite), .IF_ID_Write(IF_ID_Write), .Stall(Stall));
+ .rs1D(rs1D), .rs2D(rs2D), .MemWriteD(MemWriteD), 
+ .ToBranchE(ToBranchE), .BranchE(BranchE), .JumpE(JumpE), .IF_ID_flush(IF_ID_flush), .ID_EX_flush(ID_EX_flush),
+ .PCWrite(PCWrite), .IF_ID_Write(IF_ID_Write), .Stall(Stall));
 
 
 // Control logic
@@ -93,7 +101,7 @@ Decode uut_decode(
 );
 
 always_ff @(posedge clk or posedge rst) begin
-    if (Stall) begin
+    if (Stall || ID_EX_flush) begin
         id_ex <= '0; // setting everything to zero. Then we unzero the rest.
         id_ex.opcode3           <= opcodeD[3]; 
         id_ex.funct3            <= funct3D;

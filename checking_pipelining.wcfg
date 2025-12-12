@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="96200000fs"></ZoomStartTime>
-      <ZoomEndTime time="304000001fs"></ZoomEndTime>
-      <Cursor1Time time="239600000fs"></Cursor1Time>
+      <ZoomStartTime time="68200000fs"></ZoomStartTime>
+      <ZoomEndTime time="231000001fs"></ZoomEndTime>
+      <Cursor1Time time="190000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="148"></NameColumnWidth>
-      <ValueColumnWidth column_width="87"></ValueColumnWidth>
+      <ValueColumnWidth column_width="83"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="27" />
+   <WVObjectSize size="25" />
    <wave_markers>
       <marker time="130000000" label="" />
    </wave_markers>
@@ -40,10 +40,6 @@
       <obj_property name="ElementShortName">pc[31:0]</obj_property>
       <obj_property name="ObjectShortName">pc[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_topmodule/uut_top/pcF" type="array">
-      <obj_property name="ElementShortName">pcF[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pcF[31:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/instructionF" type="array">
       <obj_property name="ElementShortName">instructionF[31:0]</obj_property>
       <obj_property name="ObjectShortName">instructionF[31:0]</obj_property>
@@ -61,10 +57,6 @@
       <obj_property name="ObjectShortName">data2[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/rs2" type="array">
-      <obj_property name="ElementShortName">rs2[4:0]</obj_property>
-      <obj_property name="ObjectShortName">rs2[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/uut_regfile/rs2" type="array">
       <obj_property name="ElementShortName">rs2[4:0]</obj_property>
       <obj_property name="ObjectShortName">rs2[4:0]</obj_property>
    </wvobject>
@@ -115,25 +107,22 @@
    <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/uut_regfile/REG_FILE" type="array">
       <obj_property name="ElementShortName">REG_FILE[31:0][31:0]</obj_property>
       <obj_property name="ObjectShortName">REG_FILE[31:0][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/if_id" type="array">
       <obj_property name="ElementShortName">if_id</obj_property>
       <obj_property name="ObjectShortName">if_id</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/id_ex" type="array">
       <obj_property name="ElementShortName">id_ex</obj_property>
       <obj_property name="ObjectShortName">id_ex</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/ex_mem" type="array">
       <obj_property name="ElementShortName">ex_mem</obj_property>
       <obj_property name="ObjectShortName">ex_mem</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/mem_wb" type="array">
       <obj_property name="ElementShortName">mem_wb</obj_property>
       <obj_property name="ObjectShortName">mem_wb</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
 </wave_config>

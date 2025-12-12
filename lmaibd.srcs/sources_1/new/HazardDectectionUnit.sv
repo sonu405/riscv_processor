@@ -1,9 +1,9 @@
 `timescale 1ns / 1ps
 
 module HazardDectectionUnit(
-input logic ID_EX_MEMRead, MemWriteD, 
+input logic ID_EX_MEMRead, MemWriteD, BranchE, ToBranchE, JumpE,
 input logic [4:0] rs1D, rs2D, ID_EX_rd,
-output logic PCWrite, IF_ID_Write, Stall
+output logic PCWrite, IF_ID_Write, IF_ID_flush, ID_EX_flush, Stall
 );
 
 always_comb begin
@@ -21,6 +21,16 @@ always_comb begin
         PCWrite = 1'b1;
         IF_ID_Write = 1'b1;
         Stall = 1'b0;
+    end
+    
+    
+    // FOR BRANCH NOT TAKEN LOGIC
+    if ((BranchE && ToBranchE) || JumpE) begin
+        IF_ID_flush = 1'b1;
+        ID_EX_flush = 1'b1;
+    end else begin
+        IF_ID_flush = 1'b0;
+        ID_EX_flush = 1'b0;
     end
 end
 
