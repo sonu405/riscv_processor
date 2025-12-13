@@ -1,8 +1,19 @@
-93 00 90 FF // _start: addi x1, x0, -7
+93 00 90 FF // addi x1, x0, -7
 13 01 50 00 // addi x2, x0, 5
-93 01 90 FF // addi x3, x0, -7
-33 85 20 02 // mul x10, x1, x2
-93 01 90 FF // addi x3, x0, -7
-B3 95 20 02 // mulh x11, x1, x2
-33 A6 30 02 // mulhsu x12, x1, x3
-B3 B6 31 02 // mulhu x13, x3, x3 // NEXT: 6F 00 00 00 // j done
+93 01 F0 FF // addi x3, x0, -1
+13 02 10 00 // addi x4, x0, 1
+93 02 00 00 // addi x5, x0, 0
+13 03 F0 07 // addi x6, x0, 127
+93 03 00 F8 // addi x7, x0, -128
+33 85 20 02 // mul x10, x1, x2       -7 * 5
+B3 85 30 02 // mul x11, x1, x3       -7 * -1
+33 06 62 02 // mul x12, x4, x6       1 * 127
+B3 86 63 02 // mul x13, x7, x6       -128 * 127
+33 97 20 02 // mulh x14, x1, x2      high(-7*5)
+B3 97 30 02 // mulh x15, x1, x3      high(-7*-1)
+33 98 63 02 // mulh x16, x7, x6      high(-128*127)
+B3 98 73 02 // mulh x17, x7, x7      high(-128*-128)
+33 B9 31 02 // mulhu x18, x3, x3     high(0xFFFFFFFF*0xFFFFFFFF)
+B3 B9 41 02 // mulhu x19, x3, x4     high(0xFFFFFFFF*1)
+33 3A 63 02 // mulhu x20, x6, x6     high(127*127)
+B3 BA 63 02 // mulhu x21, x7, x6     high(0xFFFFFF80*127)

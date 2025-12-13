@@ -12,17 +12,18 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="394000000fs"></ZoomStartTime>
-      <ZoomEndTime time="1445000001fs"></ZoomEndTime>
-      <Cursor1Time time="810000000fs"></Cursor1Time>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="525500001fs"></ZoomEndTime>
+      <Cursor1Time time="0fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="148"></NameColumnWidth>
       <ValueColumnWidth column_width="75"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="36" />
+   <WVObjectSize size="39" />
    <wave_markers>
       <marker time="1486000000" label="" />
+      <marker time="790000000" label="" />
    </wave_markers>
    <wvobject fp_name="/tb_topmodule/uut_top/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
@@ -103,6 +104,7 @@
    <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/uut_regfile/REG_FILE" type="array">
       <obj_property name="ElementShortName">REG_FILE[31:0][31:0]</obj_property>
       <obj_property name="ObjectShortName">REG_FILE[31:0][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/if_id" type="array">
       <obj_property name="ElementShortName">if_id</obj_property>
@@ -146,6 +148,18 @@
    <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/uut_multiplier/out" type="array">
       <obj_property name="ElementShortName">out[31:0]</obj_property>
       <obj_property name="ObjectShortName">out[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/uut_execute_mux/BSel" type="logic">
+      <obj_property name="ElementShortName">BSel</obj_property>
+      <obj_property name="ObjectShortName">BSel</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/multiplier_out" type="array">
+      <obj_property name="ElementShortName">multiplier_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">multiplier_out[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/execute_out" type="array">
+      <obj_property name="ElementShortName">execute_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">execute_out[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/uut_multiplier/booth_out" type="array">
       <obj_property name="ElementShortName">booth_out[63:0]</obj_property>
