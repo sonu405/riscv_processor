@@ -12,17 +12,17 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="68200000fs"></ZoomStartTime>
-      <ZoomEndTime time="231000001fs"></ZoomEndTime>
-      <Cursor1Time time="190000000fs"></Cursor1Time>
+      <ZoomStartTime time="394000000fs"></ZoomStartTime>
+      <ZoomEndTime time="1445000001fs"></ZoomEndTime>
+      <Cursor1Time time="810000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="148"></NameColumnWidth>
-      <ValueColumnWidth column_width="83"></ValueColumnWidth>
+      <ValueColumnWidth column_width="75"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="25" />
+   <WVObjectSize size="36" />
    <wave_markers>
-      <marker time="130000000" label="" />
+      <marker time="1486000000" label="" />
    </wave_markers>
    <wvobject fp_name="/tb_topmodule/uut_top/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
@@ -76,10 +76,6 @@
       <obj_property name="ElementShortName">PCTarget[31:0]</obj_property>
       <obj_property name="ObjectShortName">PCTarget[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_topmodule/uut_top/uut_hdu/Stall" type="logic">
-      <obj_property name="ElementShortName">Stall</obj_property>
-      <obj_property name="ObjectShortName">Stall</obj_property>
-   </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/IF_ID_Write" type="logic">
       <obj_property name="ElementShortName">IF_ID_Write</obj_property>
       <obj_property name="ObjectShortName">IF_ID_Write</obj_property>
@@ -107,22 +103,72 @@
    <wvobject fp_name="/tb_topmodule/uut_top/uut_decode/uut_regfile/REG_FILE" type="array">
       <obj_property name="ElementShortName">REG_FILE[31:0][31:0]</obj_property>
       <obj_property name="ObjectShortName">REG_FILE[31:0][31:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/if_id" type="array">
       <obj_property name="ElementShortName">if_id</obj_property>
       <obj_property name="ObjectShortName">if_id</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/id_ex" type="array">
       <obj_property name="ElementShortName">id_ex</obj_property>
       <obj_property name="ObjectShortName">id_ex</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/ex_mem" type="array">
       <obj_property name="ElementShortName">ex_mem</obj_property>
       <obj_property name="ObjectShortName">ex_mem</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_topmodule/uut_top/mem_wb" type="array">
       <obj_property name="ElementShortName">mem_wb</obj_property>
       <obj_property name="ObjectShortName">mem_wb</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/uut_multiplier/sign" type="logic">
+      <obj_property name="ElementShortName">sign</obj_property>
+      <obj_property name="ObjectShortName">sign</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/uut_multiplier/start" type="logic">
+      <obj_property name="ElementShortName">start</obj_property>
+      <obj_property name="ObjectShortName">start</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/uut_multiplier/finish" type="logic">
+      <obj_property name="ElementShortName">finish</obj_property>
+      <obj_property name="ObjectShortName">finish</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/uut_multiplier/uut_booth/busy" type="logic">
+      <obj_property name="ElementShortName">busy</obj_property>
+      <obj_property name="ObjectShortName">busy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/uut_multiplier/uut_booth/counter" type="array">
+      <obj_property name="ElementShortName">counter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">counter[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/uut_multiplier/out" type="array">
+      <obj_property name="ElementShortName">out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">out[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/uut_multiplier/booth_out" type="array">
+      <obj_property name="ElementShortName">booth_out[63:0]</obj_property>
+      <obj_property name="ObjectShortName">booth_out[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/StallE" type="logic">
+      <obj_property name="ElementShortName">StallE</obj_property>
+      <obj_property name="ObjectShortName">StallE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/functional_unit_stall" type="logic">
+      <obj_property name="ElementShortName">functional_unit_stall</obj_property>
+      <obj_property name="ObjectShortName">functional_unit_stall</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/StallD" type="logic">
+      <obj_property name="ElementShortName">StallD</obj_property>
+      <obj_property name="ObjectShortName">StallD</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/multiply_start" type="logic">
+      <obj_property name="ElementShortName">multiply_start</obj_property>
+      <obj_property name="ObjectShortName">multiply_start</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_topmodule/uut_top/uut_execute/multiply_finish" type="logic">
+      <obj_property name="ElementShortName">multiply_finish</obj_property>
+      <obj_property name="ObjectShortName">multiply_finish</obj_property>
    </wvobject>
 </wave_config>

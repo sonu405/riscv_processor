@@ -26,8 +26,9 @@ logic [6:0] opcodeD, funct7D;
 logic [2:0] funct3D;
 logic [31:0] data1D, data2D, extended_immD, instructionD, PCPlus4D, pcD, ResultD;
 logic [4:0] rdD, rs1D, rs2D;
+
 // For hazard detection uni
-logic PCWrite, IF_ID_Write, Stall;
+logic PCWrite, IF_ID_Write, StallE, functional_unit_stall, StallD;
 
 
 // EXECUTE;
@@ -75,8 +76,10 @@ assign instructionD = instructionF;
 // Hazard Detection Unit
 HazardDectectionUnit uut_hdu(.ID_EX_MEMRead(id_ex.MemRead), .ID_EX_rd(id_ex.rd),
  .rs1D(rs1D), .rs2D(rs2D), .MemWriteD(MemWriteD), 
+ .ID_EX_opcode(id_ex.opcode), .ID_EX_funct7(id_ex.funct7),
  .ToBranchE(ToBranchE), .BranchE(BranchE), .JumpE(JumpE), .IF_ID_flush(IF_ID_flush), .ID_EX_flush(ID_EX_flush),
- .PCWrite(PCWrite), .IF_ID_Write(IF_ID_Write), .Stall(Stall));
+ .PCWrite(PCWrite), .IF_ID_Write(IF_ID_Write), .functional_unit_stall(functional_unit_stall),
+ .StallD(StallD), .StallE(StallE));
 
 
 // Control logic
@@ -101,10 +104,14 @@ Decode uut_decode(
 );
 
 always_ff @(posedge clk or posedge rst) begin
-    if (Stall || ID_EX_flush) begin
+    // If the execute stage is stalled then the ID_EX register shouldn't be written.
+    if (!StallE) begin
+    if (StallD || ID_EX_flush) begin
+        // Propagting the stall occured in the decode stage.
         id_ex <= '0; // setting everything to zero. Then we unzero the rest.
-        id_ex.opcode3           <= opcodeD[3]; 
+        id_ex.opcode            <= opcodeD; 
         id_ex.funct3            <= funct3D;
+        id_ex.funct7            <= funct7D;
         id_ex.rs1               <= rs1D;
         id_ex.rs2               <= rs2D;
         id_ex.rd                <= rdD;
@@ -122,7 +129,8 @@ always_ff @(posedge clk or posedge rst) begin
         id_ex.Jump              <= JumpD;
         id_ex.ResultSrc         <= ResultSrcD;
         id_ex.alu_control_lines <= alu_control_linesD;   
-        id_ex.opcode3           <= opcodeD[3]; 
+        id_ex.opcode            <= opcodeD; 
+        id_ex.funct7            <= funct7D;
         id_ex.funct3            <= funct3D;
         id_ex.rs1               <= rs1D;
         id_ex.rs2               <= rs2D;
@@ -132,6 +140,7 @@ always_ff @(posedge clk or posedge rst) begin
         id_ex.extended_imm      <= extended_immD;
         id_ex.PCPlus4           <= if_id.PCPlus4;
         id_ex.pc                <= if_id.pc;
+    end
     end
 end
 
@@ -146,35 +155,67 @@ fourby1mux uut_fu_mux2 (.in1(id_ex.data2), .in2(ResultW), .in3(ex_mem.alu_out), 
 // FORWARD UNIT MUX LOGIC
 
 Execute uut_execute(
-.Jump(id_ex.Jump), .opcode3(id_ex.opcode3), .ALUSrc(id_ex.ALUSrc),
+.clk(clk), .rst(rst),
+.Jump(id_ex.Jump), .opcode3(id_ex.opcode[3]), .ALUSrc(id_ex.ALUSrc),
 .data1(FU_data1), .data2(FU_data2),
 .extended_imm(id_ex.extended_imm), .pc(id_ex.pc),
-.funct3(id_ex.funct3),
+.funct3(id_ex.funct3), .funct7(id_ex.funct7),
 .alu_control_lines(id_ex.alu_control_lines),
-.ToBranch(ToBranchE),
-.alu_out(alu_outE), .PCTarget(PCTargetE)
+.ToBranch(ToBranchE), .functional_unit_stall(functional_unit_stall),
+.execute_out(alu_outE), .PCTarget(PCTargetE)
 );
 
 always_ff @(posedge clk or posedge rst) begin
-    ex_mem.MemWrite  <= id_ex.MemWrite;
-    ex_mem.MemRead   <= id_ex.MemRead;
-    ex_mem.RegWrite  <= id_ex.RegWrite;
-    ex_mem.ResultSrc <= id_ex.ResultSrc;
-    ex_mem.funct3    <= id_ex.funct3;
-    ex_mem.rd        <= id_ex.rd;
-//  ex_mem.data2     <= id_ex.data2;
+    // THIS if IS FUNDAMENTALLY WRONG, STALLING THE WHOLE PIPELINE SO THAT THE 
+    // FORWARDED DATA ARE AVAILABLE TO THE EXECUTE STAGE WHEN IT IS STALLED.
+//    if (!StallE) begin
+    
+    // PROPOGATING THE STALL TO EX_MEM AND WRITEBACK STAGES (THIS IS THEORY WISE CORRECT)
+    if (StallE) begin
+        ex_mem           <= '0; // setting everything to zero. Then we unzero the rest.
+        ex_mem           <= '0;
+        ex_mem.funct3    <= id_ex.funct3;
+        ex_mem.rd        <= id_ex.rd;
+        ex_mem.opcode    <= id_ex.opcode;
+        ex_mem.funct7    <= ex_mem.funct7;
+    
+        // --- FOR DATA FORWARDING WHEN Store followed by a load
+        // IS THE BUG CHECKING THE OLD VALUE OF MEMREAD? 
+        //    if (id_ex.MemWrite && ex_mem.MemRead) begin
+        if (id_ex.MemWrite && ex_mem.MemRead) begin
+            if (id_ex.rs2 == ex_mem.rd) begin
+                ex_mem.data2 <= RDM;
+            end
+        end
+        else ex_mem.data2 <= FU_data2;
+        
+        ex_mem.alu_out   <= alu_outE;
+        ex_mem.PCPlus4   <= id_ex.PCPlus4;
+    end 
+    else begin
+        ex_mem.MemWrite  <= id_ex.MemWrite;
+        ex_mem.MemRead   <= id_ex.MemRead;
+        ex_mem.RegWrite  <= id_ex.RegWrite;
+        ex_mem.ResultSrc <= id_ex.ResultSrc;
+        ex_mem.funct3    <= id_ex.funct3;
+        ex_mem.rd        <= id_ex.rd;
+        ex_mem.opcode    <= id_ex.opcode;
+        ex_mem.funct7    <= ex_mem.funct7;
+    //  ex_mem.data2     <= id_ex.data2;
     
     // --- FOR DATA FORWARDING WHEN Store followed by a load
     // IS THE BUG CHECKING THE OLD VALUE OF MEMREAD? 
-//    if (id_ex.MemWrite && ex_mem.MemRead) begin
-    if (id_ex.MemWrite && ex_mem.MemRead) begin
-        if (id_ex.rs2 == ex_mem.rd) begin
-            ex_mem.data2 <= RDM;
+    //    if (id_ex.MemWrite && ex_mem.MemRead) begin
+        if (id_ex.MemWrite && ex_mem.MemRead) begin
+            if (id_ex.rs2 == ex_mem.rd) begin
+                ex_mem.data2 <= RDM;
+            end
         end
+        else ex_mem.data2 <= FU_data2;
+    
+        ex_mem.alu_out   <= alu_outE;
+        ex_mem.PCPlus4   <= id_ex.PCPlus4;
     end
-    else ex_mem.data2 <= FU_data2;
-    ex_mem.alu_out   <= alu_outE;
-    ex_mem.PCPlus4   <= id_ex.PCPlus4;
 end
 
 // MEMORY STAGE
@@ -182,12 +223,16 @@ Memory uut_memory(.clk(clk), .MemWrite(ex_mem.MemWrite), .MemRead(ex_mem.MemRead
  .funct3(ex_mem.funct3), .data2(ex_mem.data2), .mem_addr(ex_mem.alu_out), .RD(RDM));
 
 always_ff @(posedge clk or posedge rst) begin
+    // THIS IF IS FUNDAMENTALLY WRONG, STALLING THE WHOLE PIPELINE SO THAT THE 
+    // FORWARDED DATA ARE AVAILABLE TO THE EXECUTE STAGE WHEN IT IS STALLED.
+//    if (!StallE) begin
     mem_wb.RegWrite  <= ex_mem.RegWrite;
     mem_wb.ResultSrc <= ex_mem.ResultSrc;
     mem_wb.rd        <= ex_mem.rd;
     mem_wb.alu_out   <= ex_mem.alu_out;
     mem_wb.RD        <= RDM;
     mem_wb.PCPlus4   <= ex_mem.PCPlus4;
+//    end
 end
 
 // WRITEBACK STAGE

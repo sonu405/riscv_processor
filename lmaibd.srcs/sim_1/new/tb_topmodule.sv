@@ -16,4 +16,8 @@ initial begin
     #10 rst = 0;
 end
 
+//initial begin
+//    #10000 $finish; // stop simulation after 10,000 ns or else if stops at 1000ns
+//end
+
 endmodule
