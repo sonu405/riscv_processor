@@ -1,0 +1,15 @@
+sv xil_defaultlib -i "../../../../../../../2026.1/data/rsb/busdef" --include "/home/vivado/2026.1/data/xilinx_vip/include" --include "../../../../rvcore.gen/sources_1/bd/tb_bd/ipshared/ec67/hdl" \
+"../../../bd/tb_bd/ip/tb_bd_axi_vip_0_0/sim/tb_bd_axi_vip_0_0_pkg.sv" \
+"../../../bd/tb_bd/ip/tb_bd_axi_vip_0_0/sim/tb_bd_axi_vip_0_0.sv" \
+
+verilog xil_defaultlib -i "../../../../../../../2026.1/data/rsb/busdef" --include "/home/vivado/2026.1/data/xilinx_vip/include" --include "../../../../rvcore.gen/sources_1/bd/tb_bd/ipshared/ec67/hdl" \
+"../../../bd/tb_bd/ip/tb_bd_blk_mem_gen_0_0/sim/tb_bd_blk_mem_gen_0_0.v" \
+"../../../bd/tb_bd/sim/tb_bd.v" \
+
+sv xil_defaultlib -i "../../../../../../../2026.1/data/rsb/busdef" --include "/home/vivado/2026.1/data/xilinx_vip/include" --include "../../../../rvcore.gen/sources_1/bd/tb_bd/ipshared/ec67/hdl" \
+"../../../bd/tb_bd/ip/tb_bd_topmodule_0_0/sim/tb_bd_topmodule_0_0.sv" \
+
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

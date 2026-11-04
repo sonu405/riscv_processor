@@ -1,0 +1,12 @@
+axi4stream_vip_axi4streampc.sv,systemverilog,xilinx_vip,../../../../../../../2026.1/data/xilinx_vip/hdl/axi4stream_vip_axi4streampc.sv,incdir="../../../../../../../2026.1/data/rsb/busdef"
+axi_vip_axi4pc.sv,systemverilog,xilinx_vip,../../../../../../../2026.1/data/xilinx_vip/hdl/axi_vip_axi4pc.sv,incdir="../../../../../../../2026.1/data/rsb/busdef"
+xil_common_vip_pkg.sv,systemverilog,xilinx_vip,../../../../../../../2026.1/data/xilinx_vip/hdl/xil_common_vip_pkg.sv,incdir="../../../../../../../2026.1/data/rsb/busdef"
+axi4stream_vip_pkg.sv,systemverilog,xilinx_vip,../../../../../../../2026.1/data/xilinx_vip/hdl/axi4stream_vip_pkg.sv,incdir="../../../../../../../2026.1/data/rsb/busdef"
+axi_vip_pkg.sv,systemverilog,xilinx_vip,../../../../../../../2026.1/data/xilinx_vip/hdl/axi_vip_pkg.sv,incdir="../../../../../../../2026.1/data/rsb/busdef"
+axi4stream_vip_if.sv,systemverilog,xilinx_vip,../../../../../../../2026.1/data/xilinx_vip/hdl/axi4stream_vip_if.sv,incdir="../../../../../../../2026.1/data/rsb/busdef"
+axi_vip_if.sv,systemverilog,xilinx_vip,../../../../../../../2026.1/data/xilinx_vip/hdl/axi_vip_if.sv,incdir="../../../../../../../2026.1/data/rsb/busdef"
+clk_vip_if.sv,systemverilog,xilinx_vip,../../../../../../../2026.1/data/xilinx_vip/hdl/clk_vip_if.sv,incdir="../../../../../../../2026.1/data/rsb/busdef"
+rst_vip_if.sv,systemverilog,xilinx_vip,../../../../../../../2026.1/data/xilinx_vip/hdl/rst_vip_if.sv,incdir="../../../../../../../2026.1/data/rsb/busdef"
+axi_bram_ctrl_v4_1_rfs.vhd,vhdl,axi_bram_ctrl_v4_1_14,../../../ipstatic/hdl/axi_bram_ctrl_v4_1_rfs.vhd,incdir="../../../../../../../2026.1/data/rsb/busdef"
+imem_ctrl.vhd,vhdl,xil_defaultlib,../../../../rvcore.gen/sources_1/ip/imem_ctrl/sim/imem_ctrl.vhd,incdir="../../../../../../../2026.1/data/rsb/busdef"
+glbl.v,Verilog,xil_defaultlib,glbl.v

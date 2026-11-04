@@ -1,0 +1,8 @@
+sv xil_defaultlib -i "../../../../../../../2026.1/data/rsb/busdef" --include "/home/vivado/2026.1/data/xilinx_vip/include" --include "../../../ipstatic/hdl" \
+"../../../../rvcore.gen/sources_1/ip/axi_vip_0/sim/axi_vip_0_pkg.sv" \
+"../../../../rvcore.gen/sources_1/ip/axi_vip_0/sim/axi_vip_0.sv" \
+
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

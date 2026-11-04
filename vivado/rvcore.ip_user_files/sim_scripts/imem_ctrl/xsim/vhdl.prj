@@ -1,0 +1,5 @@
+vhdl xil_defaultlib  \
+"../../../../rvcore.gen/sources_1/ip/imem_ctrl/sim/imem_ctrl.vhd" \
+
+# Do not sort compile order
+nosort

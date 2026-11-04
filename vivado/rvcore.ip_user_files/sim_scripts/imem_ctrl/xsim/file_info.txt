@@ -1,0 +1,1 @@
+imem_ctrl.vhd,vhdl,xil_defaultlib,../../../../rvcore.gen/sources_1/ip/imem_ctrl/sim/imem_ctrl.vhd,incdir="../../../../../../../2026.1/data/rsb/busdef"
