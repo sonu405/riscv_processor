@@ -196,8 +196,8 @@
             },
             "V3": {
                 "VT": "AC",
-                "BA": "0xC0000000",
-                "HA": "0xC0007FFF",
+                "BA": "0xC0008000",
+                "HA": "0xC000FFFF",
                 "BP": "C_S_AXI_BASEADDR",
                 "HP": "C_S_AXI_HIGHADDR",
                 "MA": "Master_AXI",
@@ -206,6 +206,24 @@
                 "MS": "SEG_imem_ctrl_Mem0",
                 "MV": "xilinx.com:ip:axi_vip:1.1",
                 "SX": "/imem_ctrl",
+                "SI": "S_AXI",
+                "SS": "Mem0",
+                "SV": "xilinx.com:ip:axi_bram_ctrl:4.1",
+                "TM": "both",
+                "TU": "memory"
+            },
+            "V4": {
+                "VT": "AC",
+                "BA": "0xC2000000",
+                "HA": "0xC2007FFF",
+                "BP": "C_S_AXI_BASEADDR",
+                "HP": "C_S_AXI_HIGHADDR",
+                "MA": "Master_AXI",
+                "MX": "/axi_vip_0",
+                "MI": "M_AXI",
+                "MS": "SEG_dmem_ctrl_Mem0",
+                "MV": "xilinx.com:ip:axi_vip:1.1",
+                "SX": "/dmem_ctrl",
                 "SI": "S_AXI",
                 "SS": "Mem0",
                 "SV": "xilinx.com:ip:axi_bram_ctrl:4.1",
@@ -224,6 +242,11 @@
             },
             {
                 "src": "V3",
+                "trg": "V2",
+                "EH": "2"
+            },
+            {
+                "src": "V4",
                 "trg": "V2",
                 "EH": "2"
             }

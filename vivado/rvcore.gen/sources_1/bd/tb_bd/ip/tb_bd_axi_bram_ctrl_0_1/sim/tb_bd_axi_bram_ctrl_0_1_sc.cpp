@@ -47,60 +47,51 @@
 // DO NOT MODIFY THIS FILE.
 
 
-// IP VLNV: xilinx.com:module_ref:topmodule:1.0
-// IP Revision: 1
+#include "tb_bd_axi_bram_ctrl_0_1_sc.h"
 
-(* X_CORE_INFO = "topmodule,Vivado 2026.1" *)
-(* CHECK_LICENSE_TYPE = "tb_bd_topmodule_0_0,topmodule,{}" *)
-(* CORE_GENERATION_INFO = "tb_bd_topmodule_0_0,topmodule,{x_ipProduct=Vivado 2026.1,x_ipVendor=xilinx.com,x_ipLibrary=module_ref,x_ipName=topmodule,x_ipVersion=1.0,x_ipCoreRevision=1,x_ipLanguage=VERILOG,x_ipSimLanguage=MIXED}" *)
-(* IP_DEFINITION_SOURCE = "module_ref" *)
-(* DowngradeIPIdentifiedWarnings = "yes" *)
-module tb_bd_topmodule_0_0 (
-  clk,
-  rst,
-  imem_addr,
-  imem_din,
-  imem_dout,
-  imem_en,
-  imem_we,
-  imem_rst,
-  imem_clk
-);
+#include "axi_bram_ctrl.h"
 
-(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *)
-(* X_INTERFACE_MODE = "slave" *)
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME clk, ASSOCIATED_RESET rst, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN tb_bd_s_axi_aclk_0, INSERT_VIP 0" *)
-input wire clk;
-(* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rst RST" *)
-(* X_INTERFACE_MODE = "slave" *)
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME rst, POLARITY ACTIVE_HIGH, INSERT_VIP 0" *)
-input wire rst;
-(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM ADDR" *)
-(* X_INTERFACE_MODE = "master" *)
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME IMEM, MEM_SIZE 8192, MEM_WIDTH 32, MEM_ECC NONE, MASTER_TYPE OTHER, READ_LATENCY 1" *)
-output wire [31 : 0] imem_addr;
-(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM DIN" *)
-output wire [31 : 0] imem_din;
-(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM DOUT" *)
-input wire [31 : 0] imem_dout;
-(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM EN" *)
-output wire imem_en;
-(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM WE" *)
-output wire [3 : 0] imem_we;
-(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM RST" *)
-output wire imem_rst;
-(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM CLK" *)
-output wire imem_clk;
+#include <map>
+#include <string>
 
-  topmodule inst (
-    .clk(clk),
-    .rst(rst),
-    .imem_addr(imem_addr),
-    .imem_din(imem_din),
-    .imem_dout(imem_dout),
-    .imem_en(imem_en),
-    .imem_we(imem_we),
-    .imem_rst(imem_rst),
-    .imem_clk(imem_clk)
-  );
-endmodule
+tb_bd_axi_bram_ctrl_0_1_sc::tb_bd_axi_bram_ctrl_0_1_sc(const sc_core::sc_module_name& nm) : sc_core::sc_module(nm), mp_impl(NULL)
+{
+  // configure connectivity manager
+  xsc::utils::xsc_sim_manager::addInstance("tb_bd_axi_bram_ctrl_0_1", this);
+
+  // initialize module
+    xsc::common_cpp::properties model_param_props;
+    model_param_props.addLong("C_MEMORY_DEPTH", "8192");
+    model_param_props.addLong("C_BRAM_ADDR_WIDTH", "13");
+    model_param_props.addLong("C_S_AXI_ADDR_WIDTH", "15");
+    model_param_props.addLong("C_S_AXI_DATA_WIDTH", "32");
+    model_param_props.addLong("C_S_AXI_ID_WIDTH", "1");
+    model_param_props.addLong("C_S_AXI_SUPPORTS_NARROW_BURST", "0");
+    model_param_props.addLong("C_SINGLE_PORT_BRAM", "1");
+    model_param_props.addLong("C_READ_LATENCY", "1");
+    model_param_props.addLong("C_RD_CMD_OPTIMIZATION", "0");
+    model_param_props.addLong("C_S_AXI_CTRL_ADDR_WIDTH", "32");
+    model_param_props.addLong("C_S_AXI_CTRL_DATA_WIDTH", "32");
+    model_param_props.addLong("C_ECC", "0");
+    model_param_props.addLong("C_ECC_TYPE", "0");
+    model_param_props.addLong("C_FAULT_INJECT", "0");
+    model_param_props.addLong("C_ECC_ONOFF_RESET_VALUE", "0");
+    model_param_props.addString("C_BRAM_INST_MODE", "EXTERNAL");
+    model_param_props.addString("C_S_AXI_PROTOCOL", "AXI4");
+    model_param_props.addString("C_FAMILY", "zynq");
+    model_param_props.addString("COMPONENT_NAME", "tb_bd_axi_bram_ctrl_0_1");
+
+  mp_impl = new axi_bram_ctrl("inst", model_param_props);
+
+  // initialize AXI sockets
+  target_0_rd_socket = mp_impl->target_0_rd_socket;
+  target_0_wr_socket = mp_impl->target_0_wr_socket;
+}
+
+tb_bd_axi_bram_ctrl_0_1_sc::~tb_bd_axi_bram_ctrl_0_1_sc()
+{
+  xsc::utils::xsc_sim_manager::clean();
+
+  delete mp_impl;
+}
+

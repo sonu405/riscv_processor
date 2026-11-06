@@ -1,5 +1,7 @@
 vhdl xil_defaultlib  \
 "../../../bd/tb_bd/ip/tb_bd_axi_bram_ctrl_0_0/sim/tb_bd_axi_bram_ctrl_0_0.vhd" \
+"../../../bd/tb_bd/ip/tb_bd_axi_bram_ctrl_0_1/sim/tb_bd_axi_bram_ctrl_0_1.vhd" \
+"../../../bd/tb_bd/ip/tb_bd_smartconnect_0_0/bd_0/ip/ip_1/sim/bd_7cf7_psr_aclk_0.vhd" \
 
 # Do not sort compile order
 nosort

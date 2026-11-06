@@ -63,7 +63,14 @@ module tb_bd_topmodule_0_0 (
   imem_en,
   imem_we,
   imem_rst,
-  imem_clk
+  imem_clk,
+  dmem_addr,
+  dmem_din,
+  dmem_dout,
+  dmem_en,
+  dmem_we,
+  dmem_rst,
+  dmem_clk
 );
 
 (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *)
@@ -76,7 +83,7 @@ input wire clk;
 input wire rst;
 (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM ADDR" *)
 (* X_INTERFACE_MODE = "master" *)
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME IMEM, MEM_SIZE 8192, MEM_WIDTH 32, MEM_ECC NONE, MASTER_TYPE OTHER, READ_LATENCY 1" *)
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME IMEM, MASTER_TYPE BRAM_CTRL, MEM_SIZE 8192, MEM_WIDTH 32, MEM_ECC NONE, READ_LATENCY 1" *)
 output wire [31 : 0] imem_addr;
 (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM DIN" *)
 output wire [31 : 0] imem_din;
@@ -90,6 +97,22 @@ output wire [3 : 0] imem_we;
 output wire imem_rst;
 (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM CLK" *)
 output wire imem_clk;
+(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM ADDR" *)
+(* X_INTERFACE_MODE = "master" *)
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME DMEM, MASTER_TYPE BRAM_CTRL, MEM_SIZE 8192, MEM_WIDTH 32, MEM_ECC NONE, READ_LATENCY 1" *)
+output wire [31 : 0] dmem_addr;
+(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM DIN" *)
+output wire [31 : 0] dmem_din;
+(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM DOUT" *)
+input wire [31 : 0] dmem_dout;
+(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM EN" *)
+output wire dmem_en;
+(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM WE" *)
+output wire [3 : 0] dmem_we;
+(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM RST" *)
+output wire dmem_rst;
+(* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM CLK" *)
+output wire dmem_clk;
 
   topmodule inst (
     .clk(clk),
@@ -100,6 +123,13 @@ output wire imem_clk;
     .imem_en(imem_en),
     .imem_we(imem_we),
     .imem_rst(imem_rst),
-    .imem_clk(imem_clk)
+    .imem_clk(imem_clk),
+    .dmem_addr(dmem_addr),
+    .dmem_din(dmem_din),
+    .dmem_dout(dmem_dout),
+    .dmem_en(dmem_en),
+    .dmem_we(dmem_we),
+    .dmem_rst(dmem_rst),
+    .dmem_clk(dmem_clk)
   );
 endmodule

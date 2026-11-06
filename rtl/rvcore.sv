@@ -10,7 +10,13 @@ module rvcore
 
     // Instruction Memory BRAM PORT B Channel
     input  logic [31:0] imem_dout,  // instruction from imemBRAM Port B
-    output logic [31:0] imem_addr   // byte address to imemBRAM Port B
+    output logic [31:0] imem_addr,  // byte address to imemBRAM Port B
+
+    // Data Memory BRAM PORT B Channel
+    input  logic [31:0] dmem_dout,  // data from dmemBRAM Port B
+    output logic [ 3:0] dmem_we,    // write enable to dmemBRAM Port B
+    output logic [31:0] dmem_addr,  // byte address to dmemBRAM Port B
+    output logic [31:0] dmem_din    // data to dmemBRAM Port B
 );
 
   // PIPELINE REGISTERS
@@ -45,9 +51,6 @@ module rvcore
   logic [31:0] PCTargetE, alu_outE, FU_data1, FU_data2;
   logic [1:0] ForwardA, ForwardB;
 
-
-  // MEMORY
-  logic [31:0] RDM;
 
   // WRITEBACK
   logic RegWriteW;
@@ -218,12 +221,11 @@ module rvcore
   );
 
   // FORWARD UNIT MUX LOGIC
-
   Execute uut_execute (
       .clk(clk),
       .rst(rst),
       .Jump(id_ex.Jump),
-      .opcode3(id_ex.opcode[3]),
+      .opcode(id_ex.opcode),
       .ALUSrc(id_ex.ALUSrc),
       .data1(FU_data1),
       .data2(FU_data2),
@@ -239,30 +241,16 @@ module rvcore
   );
 
   always_ff @(posedge clk or posedge rst) begin
-    // THIS if IS FUNDAMENTALLY WRONG, STALLING THE WHOLE PIPELINE SO THAT THE 
-    // FORWARDED DATA ARE AVAILABLE TO THE EXECUTE STAGE WHEN IT IS STALLED.
-    //    if (!StallE) begin
-
-    // PROPOGATING THE STALL TO EX_MEM AND WRITEBACK STAGES (THIS IS THEORY WISE CORRECT)
     if (StallE) begin
-      ex_mem        <= '0;  // setting everything to zero. Then we unzero the rest.
-      ex_mem        <= '0;
-      ex_mem.funct3 <= id_ex.funct3;
-      ex_mem.rd     <= id_ex.rd;
-      ex_mem.opcode <= id_ex.opcode;
-      ex_mem.funct7 <= ex_mem.funct7;
-
-      // --- FOR DATA FORWARDING WHEN Store followed by a load
-      // IS THE BUG CHECKING THE OLD VALUE OF MEMREAD? 
-      //    if (id_ex.MemWrite && ex_mem.MemRead) begin
-      if (id_ex.MemWrite && ex_mem.MemRead) begin
-        if (id_ex.rs2 == ex_mem.rd) begin
-          ex_mem.data2 <= RDM;
-        end
-      end else ex_mem.data2 <= FU_data2;
-
+      ex_mem         <= '0;  // setting everything to zero. Then we unzero the rest.
+      ex_mem.funct3  <= id_ex.funct3;
+      ex_mem.rd      <= id_ex.rd;
+      ex_mem.opcode  <= id_ex.opcode;
+      ex_mem.funct7  <= ex_mem.funct7;
+      ex_mem.data2   <= FU_data2;
       ex_mem.alu_out <= alu_outE;
       ex_mem.PCPlus4 <= id_ex.PCPlus4;
+      ex_mem.rs2     <= id_ex.rs2;
     end else begin
       ex_mem.MemWrite  <= id_ex.MemWrite;
       ex_mem.MemRead   <= id_ex.MemRead;
@@ -272,74 +260,77 @@ module rvcore
       ex_mem.rd        <= id_ex.rd;
       ex_mem.opcode    <= id_ex.opcode;
       ex_mem.funct7    <= ex_mem.funct7;
-      //  ex_mem.data2     <= id_ex.data2;
-
-      // --- FOR DATA FORWARDING WHEN Store followed by a load
-      // IS THE BUG CHECKING THE OLD VALUE OF MEMREAD? 
-      //    if (id_ex.MemWrite && ex_mem.MemRead) begin
-      if (id_ex.MemWrite && ex_mem.MemRead) begin
-        if (id_ex.rs2 == ex_mem.rd) begin
-          ex_mem.data2 <= RDM;
-        end
-      end else ex_mem.data2 <= FU_data2;
-
-      ex_mem.alu_out <= alu_outE;
-      ex_mem.PCPlus4 <= id_ex.PCPlus4;
+      ex_mem.data2     <= FU_data2;
+      ex_mem.alu_out   <= alu_outE;
+      ex_mem.PCPlus4   <= id_ex.PCPlus4;
+      ex_mem.rs2       <= id_ex.rs2;
     end
   end
 
   // MEMORY STAGE
+  logic [31:0] store_dataM;
+
+  // WB-to-MEM forward: if the instruction in WB is writing the register that
+  // the store in MEM wants to store, take the value from ResultW (this covers
+  // load-then-store, where the load data only exists in WB).
+  always_comb begin
+    if (mem_wb.RegWrite && (mem_wb.rd != 0) && (mem_wb.rd == ex_mem.rs2)) begin
+      store_dataM = ResultW;  // ResultW represents the Memory read of the previous instruction.
+    end else store_dataM = ex_mem.data2;
+  end
+
   Memory uut_memory (
-      .clk(clk),
       .MemWrite(ex_mem.MemWrite),
-      .MemRead(ex_mem.MemRead),
       .funct3(ex_mem.funct3),
-      .data2(ex_mem.data2),
+      .data2(store_dataM),
       .mem_addr(ex_mem.alu_out),
-      .RD(RDM)
+      .dmem_we(dmem_we),
+      .dmem_din(dmem_din)
   );
 
+  // For RD (read data), the pipeline register is BRAM instead of MEM_WB pipeline register.
+  assign dmem_addr = ex_mem.alu_out;
+
   always_ff @(posedge clk or posedge rst) begin
-    // THIS IF IS FUNDAMENTALLY WRONG, STALLING THE WHOLE PIPELINE SO THAT THE 
+    // THIS IF IS FUNDAMENTALLY WRONG, STALLING THE WHOLE PIPELINE SO THAT THE
     // FORWARDED DATA ARE AVAILABLE TO THE EXECUTE STAGE WHEN IT IS STALLED.
     //    if (!StallE) begin
     mem_wb.RegWrite  <= ex_mem.RegWrite;
     mem_wb.ResultSrc <= ex_mem.ResultSrc;
     mem_wb.rd        <= ex_mem.rd;
     mem_wb.alu_out   <= ex_mem.alu_out;
-    mem_wb.RD        <= RDM;
     mem_wb.PCPlus4   <= ex_mem.PCPlus4;
+    mem_wb.funct3    <= ex_mem.funct3;
     //    end
   end
+
+
 
   // WRITEBACK STAGE
   assign rdW = mem_wb.rd;
   assign RegWriteW = mem_wb.RegWrite;
   Writeback uut_writeback (
       .ResultSrc(mem_wb.ResultSrc),
+      .funct3(mem_wb.funct3),
       .alu_out(mem_wb.alu_out),
-      .RD(mem_wb.RD),
+      .RD(dmem_dout),  // Output from pipeline register for RD_M (DMEM BRAM)
       .PCPlus4(mem_wb.PCPlus4),
-      .Result(ResultW)
+      .Result(ResultW)  // the lw also comes from here
   );
 
 
   // Data Hazard Unit
   always_comb begin
     // --- FOR DATA FORWARDING BASED ON source and destination registers
-    // for data1 of register file
-    if ((mem_wb.RegWrite) && (mem_wb.rd != 0) && (id_ex.rs1 == mem_wb.rd)) begin
-      ForwardA = 2'b01;
-    end else if ((ex_mem.RegWrite) && (ex_mem.rd != 0) && (id_ex.rs1 == ex_mem.rd)) begin
-      ForwardA = 2'b10;
-    end else ForwardA = 2'b00;
+    // data1
+    if (ex_mem.RegWrite && ex_mem.rd != 0 && id_ex.rs1 == ex_mem.rd) ForwardA = 2'b10;
+    else if (mem_wb.RegWrite && mem_wb.rd != 0 && id_ex.rs1 == mem_wb.rd) ForwardA = 2'b01;
+    else ForwardA = 2'b00;
 
-    // for data2 of register file
-    if ((mem_wb.RegWrite) && (mem_wb.rd != 0) && (id_ex.rs2 == mem_wb.rd)) begin
-      ForwardB = 2'b01;
-    end else if ((ex_mem.RegWrite) && (ex_mem.rd != 0) && (id_ex.rs2 == ex_mem.rd)) begin
-      ForwardB = 2'b10;
-    end else ForwardB = 2'b00;
+    // data2
+    if (ex_mem.RegWrite && ex_mem.rd != 0 && id_ex.rs2 == ex_mem.rd) ForwardB = 2'b10;
+    else if (mem_wb.RegWrite && mem_wb.rd != 0 && id_ex.rs2 == mem_wb.rd) ForwardB = 2'b01;
+    else ForwardB = 2'b00;
   end
 endmodule
 

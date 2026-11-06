@@ -5,21 +5,60 @@
 module topmodule (
     (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *)
     (* X_INTERFACE_PARAMETER = "FREQ_HZ 100000000" *)
-    input logic clk,
+    input  logic        clk,
     (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rst RST" *)
     (* X_INTERFACE_PARAMETER = "POLARITY ACTIVE_HIGH" *)
     input logic rst,
 
-    // BRAM Port B interface (core is the master)
+    // Instruction memory BRAM port (core is master)
     (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM ADDR" *)
     (* X_INTERFACE_MODE = "master" *)
-    output logic [31:0] imem_addr, (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM DIN" *)
-    output logic [31:0] imem_din, (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM DOUT" *)
-    input logic [31:0] imem_dout, (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM EN" *)
-    output logic imem_en, (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM WE" *)
-    output logic [3:0] imem_we, (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM RST" *)
-    output logic imem_rst, (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM CLK" *)
-    output logic imem_clk
+    (* X_INTERFACE_PARAMETER = "MASTER_TYPE BRAM_CTRL" *)
+    output logic [31:0] imem_addr,
+
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM DIN" *)
+    (* X_INTERFACE_MODE = "master" *)
+    output logic [31:0] imem_din,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM DOUT" *)
+    (* X_INTERFACE_MODE = "master" *)
+    input  logic [31:0] imem_dout,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM EN" *)
+    (* X_INTERFACE_MODE = "master" *)
+    output logic        imem_en,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM WE" *)
+    (* X_INTERFACE_MODE = "master" *)
+    output logic [3:0]  imem_we,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM RST" *)
+    (* X_INTERFACE_MODE = "master" *)
+    output logic        imem_rst,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 IMEM CLK" *)
+    (* X_INTERFACE_MODE = "master" *)
+    output logic imem_clk,
+
+    // Data memory BRAM port (core is master)
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM ADDR" *)
+    (* X_INTERFACE_PARAMETER = "MASTER_TYPE BRAM_CTRL" *)
+    (* X_INTERFACE_MODE = "master" *)
+
+    output logic [31:0] dmem_addr,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM DIN" *)
+    (* X_INTERFACE_MODE = "master" *)
+    output logic [31:0] dmem_din,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM DOUT" *)
+    (* X_INTERFACE_MODE = "master" *)
+    input  logic [31:0] dmem_dout,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM EN" *)
+    (* X_INTERFACE_MODE = "master" *)
+    output logic        dmem_en,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM WE" *)
+    (* X_INTERFACE_MODE = "master" *)
+    output logic [3:0]  dmem_we,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM RST" *)
+    (* X_INTERFACE_MODE = "master" *)
+    output logic        dmem_rst,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 DMEM CLK" *)
+    (* X_INTERFACE_MODE = "master" *)
+    output logic dmem_clk
 );
 
   assign imem_clk = clk;
@@ -28,11 +67,19 @@ module topmodule (
   assign imem_din = 32'b0;  // no write so no data to input to bram.
   assign imem_rst = 1'b0;
 
+  assign dmem_clk = clk;
+  assign dmem_rst = 1'b0;
+  assign dmem_en  = 1'b1;  // data memory uses is enabled
+
   rvcore uut_rvcore (
       .clk(clk),
       .rst(rst),
       .imem_dout(imem_dout),
-      .imem_addr(imem_addr)
+      .imem_addr(imem_addr),
+      .dmem_dout(dmem_dout),
+      .dmem_addr(dmem_addr),
+      .dmem_we(dmem_we),
+      .dmem_din(dmem_din)
   );
 
 endmodule
