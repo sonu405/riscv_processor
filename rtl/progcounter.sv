@@ -4,8 +4,8 @@
 
 module progcounter (
     input logic clk,
-    rst,
-    PCWrite,
+    input logic rst,
+    input logic PCWrite,
     input logic [31:0] PCNext,
     output logic [31:0] pc
 );
