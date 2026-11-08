@@ -2,10 +2,10 @@
 <Root MajorVersion="0" MinorVersion="43">
   <CompositeFile CompositeFileTopName="bd_7cf7" CanBeSetAsTop="true" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="STALE" Timestamp="1793904718"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1793904719"/>
-    <Generation Name="IMPLEMENTATION" State="STALE" Timestamp="1793904718"/>
-    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1793904719"/>
+    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1794059642"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1794059642"/>
+    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1794059642"/>
+    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1794059642"/>
     <Generation Name="INSTANTIATION_TEMPLATE" State="GENERATED" Timestamp="1793904719"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
       <File Name="synth/bd_7cf7.v" Type="Verilog">

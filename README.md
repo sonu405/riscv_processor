@@ -224,3 +224,10 @@ Exception and interrupt handling (trap mechanism, CSR registers, `mtvec`, `mepc`
 ## License
 
 This project is released under the [MIT License](LICENSE).
+
+## Addresses
+
+Block	Base	Range
+dmem_ctrl	0x4000_0000	32K
+core_ctrl (reset GPIO)	0x4120_0000	64K
+imem_ctrl	0x4200_0000	32K

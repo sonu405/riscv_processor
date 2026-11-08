@@ -1,25 +1,25 @@
 `timescale 1ns / 1ps
 
 module Execute (
-    input logic Jump,
-    input logic [6:0] opcode,
-    input logic ALUSrc,
-    input logic clk,
-    input logic rst,
-    input logic [31:0] data1,
-    input logic [31:0] data2,
-    input logic [31:0] extended_imm,
-    input logic [31:0] pc,
-    input logic [6:0] funct7,
-    input logic [2:0] funct3,
-    input logic [3:0] alu_control_lines,
+    input wire Jump,
+    input wire [6:0] opcode,
+    input wire ALUSrc,
+    input wire clk,
+    input wire rst,
+    input wire [31:0] data1,
+    input wire [31:0] data2,
+    input wire [31:0] extended_imm,
+    input wire [31:0] pc,
+    input wire [6:0] funct7,
+    input wire [2:0] funct3,
+    input wire [3:0] alu_control_lines,
     output logic ToBranch,
     output logic functional_unit_stall,
     output logic [31:0] execute_out,
     output logic [31:0] PCTarget
 );
 
-  logic [31:0] PCTargetAdderInput, mux_out;
+  logic [31:0] PCTargetAdderInput, alu_in1, alu_in2;
   logic [3:0] ALUFlags;  // N, Z, C, V
   logic [31:0] alu_out, multiplier_out;
   logic execute_mux_sel, multiply_start, multiply_finish;
@@ -47,13 +47,21 @@ module Execute (
       .in1 (data2),
       .in2 (extended_imm),
       .BSel(ALUSrc),
-      .out (mux_out)
+      .out (alu_in2)
   );
+
+  always_comb begin
+    case (opcode)
+      7'b0110111: alu_in1 = 32'b0;  // LUI
+      7'b0010111: alu_in1 = pc;     // AUIPC
+      default:    alu_in1 = data1;
+    endcase
+  end
 
   alu uut_alu (
       .alu_control_lines(alu_control_lines),
-      .in1(data1),
-      .in2(mux_out),
+      .in1(alu_in1),
+      .in2(alu_in2),
       .alu_out(alu_out),
       .ALUFlags(ALUFlags)
   );

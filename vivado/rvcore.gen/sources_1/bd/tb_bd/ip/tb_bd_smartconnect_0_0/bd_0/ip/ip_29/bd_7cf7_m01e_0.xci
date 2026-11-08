@@ -2,7 +2,7 @@
   "schema": "xilinx.com:schema:json_instance:1.0",
   "ip_inst": {
     "xci_name": "bd_7cf7_m01e_0",
-    "cell_name": "m01_exit",
+    "cell_name": "m01_exit_pipeline/m01_exit",
     "component_reference": "xilinx.com:ip:sc_exit:1.0",
     "ip_revision": "19",
     "gen_directory": ".",
@@ -618,5 +618,5 @@
       }
     }
   },
-  "checksum": "a59e0d5c"
+  "checksum": "c77f2a6c"
 }

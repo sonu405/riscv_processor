@@ -3,10 +3,10 @@
 `default_nettype none
 
 module Memory (
-    input logic MemWrite,
-    input logic [2:0] funct3,
-    input logic [31:0] data2,  // data to write to memory (from rs2)
-    input logic [31:0] mem_addr,
+    input wire MemWrite,
+    input wire [2:0] funct3,
+    input wire [31:0] data2,  // data to write to memory (from rs2)
+    input wire [31:0] mem_addr,
     output logic [31:0] RD,  // Read Data
 
     output logic [ 3:0] dmem_we,

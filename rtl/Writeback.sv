@@ -1,11 +1,11 @@
 `timescale 1ns / 1ps
 
 module Writeback (
-    input  logic [ 1:0] ResultSrc,
-    input  logic [ 2:0] funct3,
-    input  logic [31:0] alu_out,
-    input  logic [31:0] RD,
-    input  logic [31:0] PCPlus4,
+    input  wire  [ 1:0] ResultSrc,
+    input  wire  [ 2:0] funct3,
+    input  wire  [31:0] alu_out,
+    input  wire  [31:0] RD,
+    input  wire  [31:0] PCPlus4,
     output logic [31:0] Result
 );
 

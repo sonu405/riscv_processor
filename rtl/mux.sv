@@ -1,15 +1,16 @@
 `timescale 1ns / 1ps
 
 
-module mux(
-input logic [31:0] in1, in2,
-input logic BSel,
-output logic [31:0] out
+module mux (
+    input wire [31:0] in1,
+    in2,
+    input wire BSel,
+    output logic [31:0] out
 );
-always_comb begin
+  always_comb begin
     if (BSel) out = in2;
     else begin
-        out = in1;
+      out = in1;
     end
-end
+  end
 endmodule

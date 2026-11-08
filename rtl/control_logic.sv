@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module control_logic (
-    input logic [6:0] opcode,
+    input wire [6:0] opcode,
     output logic Branch,
     output logic MemRead,
     output logic MemWrite,
@@ -9,13 +9,23 @@ module control_logic (
     output logic RegWrite,
     output logic Jump,
     output logic [1:0] ALUOp,
-    output logic [1:0] ImmSrc,
+    output logic [2:0] ImmSrc,
     output logic [1:0] ResultSrc
 );
-  // TODO: REMOVE MemRead after confirmation
-  // ResultSrc replaces MemToReg
 
   always_comb begin
+    Branch = 0;
+    MemRead = 0;
+    MemWrite = 0;
+    ALUSrc = 0;
+    RegWrite = 0;
+    Jump = 0;
+    ResultSrc = 0;
+    ALUOp = 0;
+    ImmSrc = 0;
+
+    // TODO: REMOVE MemRead after confirmation
+    // ResultSrc replaces MemToReg
     case (opcode)  // R type
       7'b0110011: begin
         RegWrite = 1;
@@ -24,7 +34,7 @@ module control_logic (
         MemWrite = 0;
         Branch = 0;
         ALUOp = 2'b10;
-        ImmSrc = 0;  // Don't Care
+        ImmSrc = 3'b000;  // Don't Care
         ResultSrc = 2'b00;
         Jump = 0;
       end
@@ -35,7 +45,7 @@ module control_logic (
         MemWrite = 0;
         Branch = 0;
         ALUOp = 2'b10;
-        ImmSrc = 2'b00;
+        ImmSrc = 3'b000;  // Don't Care
         ResultSrc = 2'b00;  // Write alu out to register file
         Jump = 0;
       end
@@ -46,7 +56,7 @@ module control_logic (
         MemWrite = 0;
         Branch = 0;
         ALUOp = 2'b00;
-        ImmSrc = 2'b00;
+        ImmSrc = 3'b000;
         ResultSrc = 2'b01;  // write memory to register file
         Jump = 1'b0;
       end
@@ -57,7 +67,7 @@ module control_logic (
         MemWrite = 0;
         Branch = 0;
         ALUOp = 2'b00;  // ADD
-        ImmSrc = 2'b00;
+        ImmSrc = 3'b000;
         ResultSrc = 2'b10;  // write PC+4 to register file
         Jump = 1;
       end
@@ -68,7 +78,7 @@ module control_logic (
         MemWrite = 1;
         Branch = 0;
         ALUOp = 2'b00;
-        ImmSrc = 2'b01;
+        ImmSrc = 3'b001;
         ResultSrc = 2'b00;  // Don't care, we set to 0
         Jump = 0;
       end
@@ -79,7 +89,7 @@ module control_logic (
         MemWrite = 0;
         Branch = 1;
         ALUOp = 2'b01;
-        ImmSrc = 2'b10;
+        ImmSrc = 3'b010;
         ResultSrc = 2'b00;  // DON't care
         Jump = 0;
       end
@@ -90,9 +100,31 @@ module control_logic (
         MemWrite  = 0;
         Branch    = 0;
         ALUOp     = 2'b00;  // we don't use alu
-        ImmSrc    = 2'b11;
+        ImmSrc    = 3'b011;
         ResultSrc = 2'b10;  // write PC+4 to register file
         Jump      = 1;
+      end
+      7'b0110111: begin  // U Type -- lui
+        RegWrite  = 1;
+        ALUSrc    = 1;
+        MemRead   = 0;
+        MemWrite  = 0;
+        Branch    = 0;
+        ALUOp     = 2'b00;  // add
+        ImmSrc    = 3'b100;
+        ResultSrc = 2'b00;
+        Jump      = 0;
+      end
+      7'b0010111: begin  // U Type -- auipc
+        RegWrite  = 1;
+        ALUSrc    = 1;
+        MemRead   = 0;
+        MemWrite  = 0;
+        Branch    = 0;
+        ALUOp     = 2'b00;  // add
+        ImmSrc    = 3'b100;
+        ResultSrc = 2'b00;
+        Jump      = 0;
       end
     endcase
   end

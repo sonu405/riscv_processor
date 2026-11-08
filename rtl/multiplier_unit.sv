@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 
 module multiplier_unit (
-    input logic clk,
-    input logic rst,
-    input logic start,
-    input logic [31:0] A,
-    input logic [31:0] B,
-    input logic [2:0] funct3,
+    input wire clk,
+    input wire rst,
+    input wire start,
+    input wire [31:0] A,
+    input wire [31:0] B,
+    input wire [2:0] funct3,
     output logic finish,
     output logic [31:0] out
 );
@@ -16,7 +16,8 @@ module multiplier_unit (
 
 
   always_comb begin
-    out = 32'b0;  // default
+    sign = 1'b0;
+    out  = 32'b0;  // default
 
     case (funct3)
       3'b000: begin  // mul [31:0]
@@ -35,6 +36,7 @@ module multiplier_unit (
         sign = 1'b0;
         if (finish) out = booth_out[63:32];
       end
+      default: ;
     endcase
   end
 

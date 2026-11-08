@@ -4,9 +4,9 @@
 module alu
   import alu_pkg::*;
 (
-    input logic [3:0] alu_control_lines,
-    input logic [31:0] in1,
-    input logic [31:0] in2,
+    input wire [3:0] alu_control_lines,
+    input wire [31:0] in1,
+    input wire [31:0] in2,
     output logic [31:0] alu_out,
     output logic [3:0] ALUFlags  // N, Z, C, V
 );
@@ -46,7 +46,7 @@ module alu
       ALU_SLTU: alu_out = (in1 < in2) ? 32'b1 : 32'b0;
       ALU_SLL:  alu_out = in1 << in2[4:0];
       ALU_SRL:  alu_out = in1 >> in2[4:0];
-      ALU_SRA:  alu_out = 32'($signed(in1) >>> in2[4:0]);
+      ALU_SRA:  alu_out = $signed(in1) >>> in2[4:0];
       ALU_XOR:  alu_out = in1 ^ in2;
       //   ALU_PASS_B: alu_out = in2;  // LUI
       default:  alu_out = '0;

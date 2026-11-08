@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 
 module Decode (
-    input logic clk,
-    input logic RegWrite,
-    input logic [1:0] ImmSrc,
-    input logic [31:0] instruction,
-    input logic [31:0] dataW,
-    input logic [4:0] rdWD,  // rd for WD
+    input wire clk,
+    input wire RegWrite,
+    input wire [2:0] ImmSrc,
+    input wire [31:0] instruction,
+    input wire [31:0] dataW,
+    input wire [4:0] rdWD,  // rd for WD
     output logic [6:0] opcode,
     output logic [6:0] funct7,
     output logic [4:0] rd,

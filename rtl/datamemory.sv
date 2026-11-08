@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 
 module datamemory (
-    input logic MEMWrite,
-    input logic [2:0] funct3,
-    input logic [31:0] mem_addr,
-    input logic [31:0] WD,
+    input wire MEMWrite,
+    input wire [2:0] funct3,
+    input wire [31:0] mem_addr,
+    input wire [31:0] WD,
     output logic [3:0] dmem_we,
     output logic [31:0] dmem_din
 );

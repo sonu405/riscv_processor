@@ -5,15 +5,15 @@
 module rvcore
   import pipeline_registers::*;
 (
-    input logic clk,
-    input logic rst,
+    input wire clk,
+    input wire rst,
 
     // Instruction Memory BRAM PORT B Channel
-    input  logic [31:0] imem_dout,  // instruction from imemBRAM Port B
+    input  wire  [31:0] imem_dout,  // instruction from imemBRAM Port B
     output logic [31:0] imem_addr,  // byte address to imemBRAM Port B
 
     // Data Memory BRAM PORT B Channel
-    input  logic [31:0] dmem_dout,  // data from dmemBRAM Port B
+    input  wire  [31:0] dmem_dout,  // data from dmemBRAM Port B
     output logic [ 3:0] dmem_we,    // write enable to dmemBRAM Port B
     output logic [31:0] dmem_addr,  // byte address to dmemBRAM Port B
     output logic [31:0] dmem_din    // data to dmemBRAM Port B
@@ -35,7 +35,8 @@ module rvcore
 
   // Decode Stage
   logic BranchD, MemReadD, MemWriteD, ALUSrcD, RegWriteD, JumpD;
-  logic [1:0] ALUOpD, ImmSrcD, ResultSrcD;
+  logic [1:0] ALUOpD, ResultSrcD;
+  logic [2:0] ImmSrcD;
   logic [3:0] alu_control_linesD;
   logic [6:0] opcodeD, funct7D;
   logic [2:0] funct3D;
@@ -74,7 +75,10 @@ module rvcore
   );
 
   always_ff @(posedge clk or posedge rst) begin
-    if (IF_ID_Write) begin
+    if (rst) begin
+      if_id             <= '0;
+      if_id.instruction <= 32'h00000013;  // NOP instead of an all-zero word (optional, see below)
+    end else if (IF_ID_Write) begin
       if (IF_ID_flush) begin
         if_id.pc <= 0;
         if_id.instruction <= 32'h00000013;  // THIS FORMS a nop
@@ -158,8 +162,9 @@ module rvcore
   );
 
   always_ff @(posedge clk or posedge rst) begin
+    if (rst) id_ex <= '0;
     // If the execute stage is stalled then the ID_EX register shouldn't be written.
-    if (!StallE) begin
+    else if (!StallE) begin
       if (StallD || ID_EX_flush) begin
         // Propagting the stall occured in the decode stage.
         id_ex              <= '0;  // setting everything to zero. Then we unzero the rest.
@@ -241,7 +246,8 @@ module rvcore
   );
 
   always_ff @(posedge clk or posedge rst) begin
-    if (StallE) begin
+    if (rst) ex_mem <= '0;
+    else if (StallE) begin
       ex_mem         <= '0;  // setting everything to zero. Then we unzero the rest.
       ex_mem.funct3  <= id_ex.funct3;
       ex_mem.rd      <= id_ex.rd;
@@ -292,16 +298,15 @@ module rvcore
   assign dmem_addr = ex_mem.alu_out;
 
   always_ff @(posedge clk or posedge rst) begin
-    // THIS IF IS FUNDAMENTALLY WRONG, STALLING THE WHOLE PIPELINE SO THAT THE
-    // FORWARDED DATA ARE AVAILABLE TO THE EXECUTE STAGE WHEN IT IS STALLED.
-    //    if (!StallE) begin
-    mem_wb.RegWrite  <= ex_mem.RegWrite;
-    mem_wb.ResultSrc <= ex_mem.ResultSrc;
-    mem_wb.rd        <= ex_mem.rd;
-    mem_wb.alu_out   <= ex_mem.alu_out;
-    mem_wb.PCPlus4   <= ex_mem.PCPlus4;
-    mem_wb.funct3    <= ex_mem.funct3;
-    //    end
+    if (rst) mem_wb <= '0;
+    else begin
+      mem_wb.RegWrite  <= ex_mem.RegWrite;
+      mem_wb.ResultSrc <= ex_mem.ResultSrc;
+      mem_wb.rd        <= ex_mem.rd;
+      mem_wb.alu_out   <= ex_mem.alu_out;
+      mem_wb.PCPlus4   <= ex_mem.PCPlus4;
+      mem_wb.funct3    <= ex_mem.funct3;
+    end
   end
 
 

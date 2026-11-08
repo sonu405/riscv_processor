@@ -5,10 +5,10 @@
 module alu_control
   import alu_pkg::*;
 (
-    input logic [1:0] ALUOp,
-    input logic [2:0] funct3,
-    input logic op5,
-    input logic funct7,  // funct7[5]
+    input wire [1:0] ALUOp,
+    input wire [2:0] funct3,
+    input wire op5,
+    input wire funct7,  // funct7[5]
     output logic [3:0] alu_control_lines
 );
 
@@ -46,7 +46,7 @@ module alu_control
             alu_control_lines = ALU_XOR;  // TODO
           end
           3'b101: begin  // srl, sra, srli, srai
-            if ({op5, funct7} == 2'b11) alu_control_lines = ALU_SRA;
+            if (funct7 == 1'b1) alu_control_lines = ALU_SRA;
             else alu_control_lines = ALU_SRL;
           end
           3'b110: begin  // or, ori

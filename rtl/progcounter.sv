@@ -3,10 +3,10 @@
 `default_nettype none
 
 module progcounter (
-    input logic clk,
-    input logic rst,
-    input logic PCWrite,
-    input logic [31:0] PCNext,
+    input wire clk,
+    input wire rst,
+    input wire PCWrite,
+    input wire [31:0] PCNext,
     output logic [31:0] pc
 );
 
